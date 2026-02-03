@@ -2,25 +2,41 @@
 
 import Link from "next/link";
 import { ArrowLeft, Home } from "lucide-react";
-import { useState, use } from "react";
+import { useState, use, useEffect } from "react";
 import { allDonations } from "@/lib/data";
 
 import { DonationHero } from "@/components/donation/DonationHero";
 import { DonationMobileHeader } from "@/components/donation/DonationMobileHeader";
 import { DonationTabs, TabType } from "@/components/donation/DonationTabs";
-import { DonationStory, DonationUpdates, DonationWithdrawals } from "@/components/donation/DonationContent";
+import { DonationStory, DonationUpdates } from "@/components/donation/DonationContent";
 import { DonationSidebar } from "@/components/donation/DonationSidebar";
 
 export default function DonationDetail({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = use(params);
     const [activeTab, setActiveTab] = useState<TabType>('donasi');
+    const [liveData, setLiveData] = useState<any>(null); // State for fresh data
 
-    // Find data from shared source
-    const data = allDonations.find(d => d.slug === slug);
+    // Initial static find
+    const initialData = allDonations.find(d => d.slug === slug);
 
-    if (!data) {
+    // Fetch fresh data from API on mount
+    useEffect(() => {
+        if (!slug) return;
+        fetch(`/api/donations?slug=${slug}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data && !data.error) {
+                    setLiveData(data);
+                }
+            })
+            .catch(err => console.error("Failed to fetch fresh donation data", err));
+    }, [slug]);
+
+    if (!initialData) {
         return <div className="min-h-screen flex items-center justify-center">Donasi tidak ditemukan</div>;
     }
+
+    const data = liveData || initialData;
 
     const percentage = Math.min((data.currentAmount / data.targetAmount) * 100, 100);
 
@@ -64,7 +80,6 @@ export default function DonationDetail({ params }: { params: Promise<{ slug: str
                         <div className="bg-white dark:bg-card px-4 py-6 md:rounded-2xl md:p-8 md:shadow-sm min-h-[400px]">
                             {activeTab === 'donasi' && <DonationStory data={data} donors={data.donors} />}
                             {activeTab === 'kabar' && <DonationUpdates updates={data.updates} />}
-                            {activeTab === 'pencairan' && <DonationWithdrawals withdrawals={data.withdrawals} />}
                         </div>
                     </div>
 

@@ -32,12 +32,38 @@ export default function PaymentPage({ params }: { params: Promise<{ slug: string
         setAmount(val ? parseInt(val) : 0);
     };
 
-    const handleSubmit = () => {
-        // Here you would integrate with a payment gateway (Midtrans, Xendit, etc.)
-        // For now, we simulate a success/redirect
-        alert(`Memproses pembayaran sebesar Rp ${amount.toLocaleString("id-ID")} untuk ${data.title}`);
-        // router.push(`/donasi/${slug}/success`); // Placeholder for future
+    const handleSubmit = async () => {
+        if (amount < 10000) {
+            alert("Minimal donasi Rp 10.000");
+            return;
+        }
+
+        // 1. Save donation to mock DB (CRUD)
+        try {
+            const res = await fetch('/api/donations', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    slug: data.slug,
+                    amount: amount,
+                    name: isAnonymous ? "Anonim" : name,
+                    email: contact,
+                    message: message
+                })
+            });
+
+            if (res.ok) {
+                // 2. Redirect to Success Page
+                router.push(`/donasi/${slug}/success`);
+            } else {
+                alert("Terjadi kesalahan sistem, silakan coba lagi.");
+            }
+        } catch (error) {
+            console.error("Failed to save donation locally", error);
+            alert("Terjadi kesalahan jaringan.");
+        }
     };
+
 
     return (
         <div className="min-h-screen bg-background pb-32">

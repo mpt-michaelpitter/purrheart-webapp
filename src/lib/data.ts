@@ -4,6 +4,8 @@ export interface Donor {
     amount: number;
     time: string;
     avatar: string | null;
+    email?: string; // Added for CRUD persistence
+    message?: string; // Added for CRUD persistence
 }
 
 export interface Update {
@@ -32,6 +34,7 @@ export interface Donation {
     daysLeft: number;
     verified: boolean;
     description: string;
+    saweriaUrl?: string;
     updates: Update[];
     withdrawals: Withdrawal[];
     donors: Donor[];
@@ -61,6 +64,7 @@ export const donations: Donation[] = [
         donorCount: 65,
         daysLeft: 11,
         verified: true,
+        saweriaUrl: "https://saweria.co/Halopeduli",
         description: `
         <p class="mb-4">Bencana banjir bandang dan tanah longsor telah meluluhlantakkan sebagian wilayah Sumatra. Ribuan warga kehilangan tempat tinggal, harta benda, dan sumber pencaharian mereka. Saat ini, mereka sangat membutuhkan uluran tangan kita.</p>
         <p class="mb-4">Tim purrhearth Foundation telah turun ke lapangan untuk menyalurkan bantuan darurat berupa makanan siap saji, obat-obatan, selimut, dan kebutuhan pokok lainnya. Namun, kebutuhan di lapangan masih sangat besar mengingat luasnya dampak bencana.</p>
