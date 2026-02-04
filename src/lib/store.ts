@@ -35,4 +35,36 @@ export const addDonation = (slug: string, donorFn: (currentDonation: Donation) =
         return updatedDonation;
     }
     return null;
+    return null;
+};
+
+// Pending Donations Store (in-memory)
+interface PendingDonation {
+    slug: string;
+    donor: Donor;
+    orderId: string;
+}
+
+const globalForPending = global as unknown as { pendingStore: Record<string, PendingDonation> };
+
+if (!globalForPending.pendingStore) {
+    globalForPending.pendingStore = {};
+}
+
+export const addPendingDonation = (orderId: string, slug: string, donor: Donor) => {
+    globalForPending.pendingStore[orderId] = { slug, donor, orderId };
+};
+
+export const verifyDonation = (orderId: string) => {
+    const pending = globalForPending.pendingStore[orderId];
+    if (pending) {
+        // Move from pending to actual store
+        const updated = addDonation(pending.slug, () => pending.donor);
+
+        // Remove from pending
+        delete globalForPending.pendingStore[orderId];
+
+        return updated;
+    }
+    return null;
 };

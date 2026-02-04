@@ -4,6 +4,7 @@ import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { MobileBottomNav } from "@/components/layout/MobileBottomNav"; // Import
+import { PendingPaymentBar } from "@/components/donation/PendingPaymentBar";
 import { ThemeProvider } from "@/components/theme-provider";
 
 const outfit = Outfit({
@@ -36,6 +37,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <PendingPaymentBar />
           <MobileBottomNav />
         </ThemeProvider>
       </body>
