@@ -1,18 +1,16 @@
 import { NextResponse } from "next/server";
-import { getDonations, getDonationBySlug, addPendingDonation } from "@/lib/store";
+import { createClient } from "next-sanity";
+import { apiVersion, dataset, projectId } from "@/sanity/env";
 import { core } from "@/lib/midtrans";
 
-export async function GET(request: Request) {
-    const { searchParams } = new URL(request.url);
-    const slug = searchParams.get("slug");
-
-    if (slug) {
-        const donation = getDonationBySlug(slug);
-        return NextResponse.json(donation || { error: "Not found" }, { status: donation ? 200 : 404 });
-    }
-
-    return NextResponse.json(getDonations());
-}
+// Create a client with the Write Token
+const writeClient = createClient({
+    projectId,
+    dataset,
+    apiVersion,
+    useCdn: false, // We need fresh data for writes
+    token: process.env.SANITY_API_TOKEN, // Protected by server-side env
+});
 
 export async function POST(request: Request) {
     try {
@@ -23,10 +21,20 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
 
-        // Generate simplified random order ID for demo purposes
-        // In real app: save to DB as pending -> get ID -> use ID here
+        // 1. Fetch Campaign ID from Slug
+        const campaign = await writeClient.fetch(
+            `*[_type == "campaign" && slug.current == $slug][0]._id`,
+            { slug }
+        );
+
+        if (!campaign) {
+            return NextResponse.json({ error: "Campaign not found" }, { status: 404 });
+        }
+
+        // 2. Generate Order ID
         const orderId = `DONASI-${slug}-${Date.now()}`;
 
+        // 3. Prepare Midtrans Request
         let parameter: any = {
             payment_type: payment_type,
             transaction_details: {
@@ -46,46 +54,35 @@ export async function POST(request: Request) {
         };
 
         if (payment_type === 'bank_transfer') {
-            parameter = {
-                ...parameter,
-                bank_transfer: {
-                    bank: "bca" // Default to BCA for simplicity, can be dynamic
-                }
-            }
+            parameter = { ...parameter, bank_transfer: { bank: "bca" } }
         } else if (payment_type === 'qris') {
-            parameter = {
-                ...parameter,
-                qris: {
-                    acquirer: "gopay"
-                }
-            }
+            parameter = { ...parameter, qris: { acquirer: "gopay" } }
         }
 
+        // 4. Call Midtrans
         const chargeResponse = await core.charge(parameter);
 
-        // Optimistically update local store for demo (or can be done after payment success on frontend)
-        // For now we keep the store update so the UI reflects "someone donated" locally, 
-        // essentially treating the "intent to donate" as a donation in this mock DB.
-        // Store in pending state
-        const pendingDonor = {
-            name: name || "Anonim",
+        // 5. Save to Sanity
+        await writeClient.create({
+            _type: 'donation',
+            donorName: name || "Anonim",
             amount: Number(amount),
-            time: "Baru saja",
-            avatar: null,
-            email: email || null,
-            message: message || null
-        };
-
-        addPendingDonation(orderId, slug, pendingDonor);
+            email: email,
+            message: message,
+            campaign: { _type: 'reference', _ref: campaign },
+            status: 'pending',
+            orderId: orderId,
+            paymentType: payment_type,
+            createdAt: new Date().toISOString()
+        });
 
         return NextResponse.json({
             success: true,
             data: chargeResponse
-            // Removed 'donation' field as it is not confirmed yet
         });
 
     } catch (e) {
-        console.error("Midtrans Error:", e);
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+        console.error("Donation Error:", e);
+        return NextResponse.json({ error: "Internal Server Error", details: e instanceof Error ? e.message : String(e) }, { status: 500 });
     }
 }

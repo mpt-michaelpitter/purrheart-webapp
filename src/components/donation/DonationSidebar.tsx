@@ -84,7 +84,7 @@ export function DonationSidebar({ data, percentage }: SidebarProps) {
                     <div className="bg-white dark:bg-card p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
                         <h3 className="font-bold text-slate-900 dark:text-white mb-4">Donatur Terbanyak</h3>
                         <div className="space-y-4">
-                            {data.donors.slice(0, 5).map((d: any, i: number) => (
+                            {[...data.donors].sort((a: any, b: any) => b.amount - a.amount).slice(0, 5).map((d: any, i: number) => (
                                 <div key={i} className="flex justify-between items-center text-sm">
                                     <span className="text-slate-600 dark:text-slate-400 truncate max-w-[120px]">{d.name}</span>
                                     <span className="font-bold text-purple-600">Rp {d.amount.toLocaleString("id-ID")}</span>

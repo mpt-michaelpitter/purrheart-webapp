@@ -1,5 +1,5 @@
 
-import { Heart, FileText, RefreshCcw } from "lucide-react";
+import { Heart, FileText, RefreshCcw, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export type TabType = 'donasi' | 'kabar';
@@ -24,8 +24,8 @@ export function DonationTabs({ activeTab, onTabChange }: DonationTabsProps) {
                     onClick={() => onTabChange('kabar')}
                     className={cn("py-4 flex flex-col items-center gap-1 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors", activeTab === 'kabar' ? "bg-purple-50/50 dark:bg-slate-800" : "")}
                 >
-                    <FileText className={cn("h-5 w-5", activeTab === 'kabar' ? "text-purple-600" : "text-slate-400")} />
-                    <span className={cn("text-xs font-bold", activeTab === 'kabar' ? "text-purple-700" : "text-slate-500")}>Kabar</span>
+                    <Users className={cn("h-5 w-5", activeTab === 'kabar' ? "text-purple-600" : "text-slate-400")} />
+                    <span className={cn("text-xs font-bold", activeTab === 'kabar' ? "text-purple-700" : "text-slate-500")}>Donatur</span>
                 </button>
             </div>
         </div>

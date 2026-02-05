@@ -15,47 +15,64 @@ interface DonationWithdrawalsProps {
     withdrawals: any[];
 }
 
+import { PortableText } from '@portabletext/react';
+
+// ... (interfaces)
+
 export function DonationStory({ data, donors }: DonationStoryProps) {
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
             <div className="prose prose-slate prose-lg dark:prose-invert max-w-none">
-                <div dangerouslySetInnerHTML={{ __html: data.description }} />
+                {Array.isArray(data.description) ? (
+                    <PortableText value={data.description} />
+                ) : (
+                    <div dangerouslySetInnerHTML={{ __html: data.description }} />
+                )}
             </div>
             <div className="border-t border-slate-100 dark:border-slate-800 pt-6">
-                <h3 className="font-bold text-lg mb-4">Donatur Terbaru</h3>
-                <div className="space-y-4">
-                    {donors.slice(0, 3).map((donor, idx) => (
-                        <div key={idx} className="flex items-center gap-3">
-                            <div className="h-10 w-10 rounded-full flex items-center justify-center text-lg">😊</div>
-                            <div>
-                                <p className="text-sm font-bold  ">{donor.name}</p>
-                                <p className="text-xs text-slate-500">Berdonasi <span className="text-purple-600 font-semibold">Rp {donor.amount.toLocaleString("id-ID")}</span> • {donor.time}</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                {/* Donatur Terbaru moved to separate tab */}
             </div>
         </div>
     );
 }
 
-export function DonationUpdates({ updates }: DonationUpdatesProps) {
+interface DonationListProps {
+    donors: any[];
+}
+
+export function DonationList({ donors }: DonationListProps) {
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-            {updates.map((update, idx) => (
-                <div key={idx} className="border-l-4 border-purple-200 pl-4 py-1">
-                    <div className="text-sm text-slate-500 mb-1">{update.date}</div>
-                    <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-2">{update.title}</h3>
-                    <div className="text-sm text-slate-600 dark:text-slate-300">
-                        {update.image && (
-                            <div className="relative w-full aspect-video rounded-lg overflow-hidden mb-3 mt-2">
-                                <Image src={update.image} alt={update.title} fill className="object-cover" />
+            <h3 className="font-bold text-xl text-slate-900 dark:text-white mb-4">Para Donatur ({donors.length})</h3>
+
+            {donors && donors.length > 0 ? (
+                <div className="space-y-6">
+                    {donors.map((donor, idx) => (
+                        <div key={idx} className="flex gap-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
+                            <div className="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center text-2xl shrink-0">😊</div>
+                            <div className="flex-1">
+                                <div className="flex justify-between items-start">
+                                    <div>
+                                        <p className="font-bold text-slate-900 dark:text-white">{donor.name}</p>
+                                        <p className="text-xs text-slate-500">{new Date(donor.time).toLocaleDateString("id-ID", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                                    </div>
+                                    <span className="font-bold text-purple-600">Rp {donor.amount.toLocaleString("id-ID")}</span>
+                                </div>
+                                {donor.message && (
+                                    <div className="mt-3 text-sm text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900/50 p-3 rounded-lg italic">
+                                        "{donor.message}"
+                                    </div>
+                                )}
                             </div>
-                        )}
-                        {update.content}
-                    </div>
+                        </div>
+                    ))}
                 </div>
-            ))}
+            ) : (
+                <div className="text-center py-10 text-slate-500">
+                    <p>Belum ada donatur yang bergabung.</p>
+                    <p className="text-sm mt-1">Jadilah orang baik pertama!</p>
+                </div>
+            )}
         </div>
     );
 }
