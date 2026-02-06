@@ -19,6 +19,7 @@ export function MainLayoutWrapper({
 }: MainLayoutWrapperProps) {
     const pathname = usePathname();
     const isStudio = pathname?.startsWith("/studio");
+    const isPaymentPage = pathname?.includes("/payment");
     const mainPages = ["/", "/donasi", "/adopsi", "/relawan", "/amalanku", "/sponsor"];
     const isMainPage = pathname ? mainPages.includes(pathname) : false;
 
@@ -33,7 +34,7 @@ export function MainLayoutWrapper({
                 <main className="flex-1 bg-slate-50/50 dark:bg-background pb-20 md:pb-0">
                     {children}
                 </main>
-                {footer}
+                {!isPaymentPage && footer}
                 {pendingBar}
                 {isMainPage && mobileNav}
             </div>

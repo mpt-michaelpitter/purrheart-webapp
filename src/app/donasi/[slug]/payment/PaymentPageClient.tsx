@@ -26,14 +26,16 @@ export default function PaymentPageClient({ data }: PaymentPageClientProps) {
     const router = useRouter();
     const slug = data.slug;
 
-    const [amount, setAmount] = useState<number>(50000);
+    const [amount, setAmount] = useState<number>(0);
     const [isAnonymous, setIsAnonymous] = useState(false);
     const [name, setName] = useState("");
     const [contact, setContact] = useState("");
     const [message, setMessage] = useState("");
     const [paymentMethod, setPaymentMethod] = useState<"qris" | "bank_transfer">("qris");
     const [loading, setLoading] = useState(false);
-    const [paymentResponse, setPaymentResponse] = useState<any>(null); // To store API response
+    const [showCancelModal, setShowCancelModal] = useState(false);
+    const [paymentResponse, setPaymentResponse] = useState<any>(null);
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
     const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         // Remove non-numeric characters
@@ -41,9 +43,37 @@ export default function PaymentPageClient({ data }: PaymentPageClientProps) {
         setAmount(val ? parseInt(val) : 0);
     };
 
-    const handleSubmit = async () => {
+    const validateForm = () => {
+        const newErrors: { [key: string]: string } = {};
+        if (amount > 100000000) {
+            newErrors.amount = "Maksimal donasi Rp 100.000.000";
+        }
+       
+
         if (amount < 10000) {
-            alert("Minimal donasi Rp 10.000");
+            newErrors.amount = "Minimal donasi Rp 10.000";
+        }
+
+
+        if (!isAnonymous && !name.trim()) {
+            newErrors.name = "Nama wajib diisi";
+        }
+
+        if (!isAnonymous && !contact.trim()) {
+            newErrors.contact = "Kontak wajib diisi";
+        }
+        if (!isAnonymous && !message.trim()) {
+            newErrors.message = "Pesan wajib diisi";
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const handleSubmit = async () => {
+        if (!validateForm()) {
+            // Scroll to top or first error
+            window.scrollTo({ top: 0, behavior: "smooth" });
             return;
         }
 
@@ -96,7 +126,7 @@ export default function PaymentPageClient({ data }: PaymentPageClientProps) {
         }
     };
 
-    // Polling Payment Status
+    
     useEffect(() => {
         let interval: NodeJS.Timeout;
 
@@ -122,7 +152,7 @@ export default function PaymentPageClient({ data }: PaymentPageClientProps) {
         };
     }, [paymentResponse, slug, router]);
 
-    // Check for existing pending payment on mount
+
     useEffect(() => {
         if (!paymentResponse) {
             const stored = localStorage.getItem("pending_payment");
@@ -150,7 +180,7 @@ export default function PaymentPageClient({ data }: PaymentPageClientProps) {
             amount={amount}
             paymentResponse={paymentResponse}
             slug={slug}
-            onBack={() => setPaymentResponse(null)}
+            onBack={() => router.push('/')}
         />
     }
 
@@ -159,7 +189,7 @@ export default function PaymentPageClient({ data }: PaymentPageClientProps) {
             {/* Header */}
             <div className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
                 <div className="container mx-auto max-w-lg md:max-w-2xl px-4 h-16 flex items-center gap-4">
-                    <button onClick={() => router.back()} className="p-2 -ml-2 hover:bg-accent hover:text-accent-foreground rounded-full transition-colors">
+                    <button onClick={() => setShowCancelModal(true)} className="p-2 -ml-2 hover:bg-accent hover:text-accent-foreground rounded-full transition-colors">
                         <ArrowLeft className="h-5 w-5" />
                     </button>
                     <h1 className="font-bold text-lg truncate flex-1 text-foreground">{data.title}</h1>
@@ -179,10 +209,13 @@ export default function PaymentPageClient({ data }: PaymentPageClientProps) {
                             value={amount ? amount.toLocaleString("id-ID") : ""}
                             onChange={handleAmountChange}
                             placeholder="0"
-                            className="w-full pl-12 pr-4 py-4 text-3xl font-bold text-foreground bg-background rounded-xl border-none focus:ring-2 focus:ring-primary placeholder:text-muted-foreground"
+                            className={cn(
+                                "w-full pl-12 pr-4 py-4 text-3xl font-bold text-foreground bg-background rounded-xl border-none focus:ring-2 focus:ring-primary placeholder:text-muted-foreground transition-all",
+                                errors.amount ? "focus:ring-destructive" : ""
+                            )}
                         />
                     </div>
-                    {amount < 10000 && amount > 0 && <p className="text-xs text-destructive">Minimal donasi Rp 10.000</p>}
+                    {errors.amount && <p className="text-xs text-destructive font-medium flex items-center gap-1"><AlertCircle className="h-3 w-3" /> {errors.amount}</p>}
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                         {PRESET_AMOUNTS.map((preset) => (
@@ -258,20 +291,38 @@ export default function PaymentPageClient({ data }: PaymentPageClientProps) {
                                 <input
                                     type="text"
                                     value={name}
-                                    onChange={(e) => setName(e.target.value)}
+                                    onChange={(e) => {
+                                        setName(e.target.value);
+                                        if (errors.name) setErrors({ ...errors, name: "" });
+                                    }}
                                     placeholder="Nama Lengkap Anda"
-                                    className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                                    className={cn(
+                                        "w-full px-4 py-3 rounded-lg border bg-background text-foreground focus:ring-2 focus:border-transparent outline-none transition-all",
+                                        errors.name
+                                            ? "border-destructive focus:ring-destructive"
+                                            : "border-input focus:ring-primary"
+                                    )}
                                 />
+                                {errors.name && <p className="text-xs text-destructive font-medium mt-1">{errors.name}</p>}
                             </div>
                             <div>
                                 <label className="text-xs font-semibold text-muted-foreground mb-1 block">Nomor Ponsel atau Email</label>
                                 <input
                                     type="text"
                                     value={contact}
-                                    onChange={(e) => setContact(e.target.value)}
+                                    onChange={(e) => {
+                                        setContact(e.target.value);
+                                        if (errors.contact) setErrors({ ...errors, contact: "" });
+                                    }}
                                     placeholder="0812xxxx atau email@contoh.com"
-                                    className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                                    className={cn(
+                                        "w-full px-4 py-3 rounded-lg border bg-background text-foreground focus:ring-2 focus:border-transparent outline-none transition-all",
+                                        errors.contact
+                                            ? "border-destructive focus:ring-destructive"
+                                            : "border-input focus:ring-primary"
+                                    )}
                                 />
+                                {errors.contact && <p className="text-xs text-destructive font-medium mt-1">{errors.contact}</p>}
                             </div>
                         </div>
                     )}
@@ -311,28 +362,67 @@ export default function PaymentPageClient({ data }: PaymentPageClientProps) {
             </div>
 
             {/* Bottom Bar */}
-            <div className="fixed bottom-[60px] md:bottom-0 left-0 right-0 bg-background/95 backdrop-blur border-t border-border p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-[100]">
-                <div className="container mx-auto max-w-lg md:max-w-2xl flex items-center justify-between gap-4">
-                    <div className="hidden md:block">
-                        <p className="text-xs text-muted-foreground font-medium">Total Pembayaran</p>
-                        <p className="text-xl font-bold text-primary">Rp {amount.toLocaleString("id-ID")}</p>
+            <div className="fixed bottom-0 md:bottom-0 left-0 right-0 bg-background/95 backdrop-blur border-t border-border p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-[100]">
+                <div className="container mx-auto max-w-lg md:max-w-2xl flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div className="w-full md:w-auto flex justify-between items-center md:block">
+                        <div className="md:mb-0">
+                            <p className="text-xs text-muted-foreground font-medium">Total Pembayaran</p>
+                            <p className="text-xl font-bold text-primary">Rp {amount.toLocaleString("id-ID")}</p>
+                        </div>
                     </div>
-                    <button
-                        onClick={handleSubmit}
-                        disabled={loading || amount < 10000}
-                        className="flex-1 md:flex-none md:w-64 bg-primary text-primary-foreground font-bold py-3.5 rounded-xl shadow-lg shadow-purple-200/20 dark:shadow-none hover:bg-primary/90 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center"
-                    >
-                        {loading ? "Memproses..." : `Lanjut Pembayaran ${amount > 0 ? `• Rp ${amount.toLocaleString("id-ID")}` : ""}`}
-                    </button>
+                    <div className="flex w-full md:w-auto items-center gap-3">
+                      
+                        <button
+                            onClick={handleSubmit}
+                            disabled={loading}
+                            className="flex-[2] md:flex-none md:w-64 bg-primary text-primary-foreground font-bold py-3.5 rounded-xl shadow-lg shadow-purple-200/20 dark:shadow-none hover:bg-primary/90 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center"
+                        >
+                            {loading ? "Memproses..." : `Lanjut Bayar`}
+                        </button>
+                    </div>
                 </div>
             </div>
+
+            {/* Cancel Confirmation Modal */}
+            {showCancelModal && (
+                <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="bg-card w-full max-w-sm p-6 rounded-2xl shadow-xl scale-100 animate-in zoom-in-95 duration-200 border border-border">
+                        <h3 className="text-lg font-bold text-foreground mb-2">Batalkan Donasi?</h3>
+                        <p className="text-sm text-muted-foreground mb-6">
+                            Apakah Anda yakin ingin membatalkan proses donasi ini? Data yang Anda isi tidak akan tersimpan.
+                        </p>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setShowCancelModal(false)}
+                                className="flex-1 py-2.5 rounded-xl font-semibold border border-border hover:bg-muted transition-colors text-foreground"
+                            >
+                                Tidak
+                            </button>
+                            <button
+                                onClick={() => router.back()}
+                                className="flex-1 py-2.5 rounded-xl font-semibold bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors"
+                            >
+                                Ya, Batalkan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 }
 
-function WaitingPaymentView({ amount, paymentResponse, slug, onBack }: { amount: number, paymentResponse: any, slug: string, onBack: () => void }) {
+function WaitingPaymentView({ amount, paymentResponse, slug, onBack }: {
+    amount: number, paymentResponse: any, slug: string, onBack: () =>
+
+
+        void
+}) {
     const [copied, setCopied] = useState(false);
+
     const [openInstruction, setOpenInstruction] = useState<string | null>(null);
+    const [showCancelModal, setShowCancelModal] = useState(false);
 
     // Expiry Time State (24 hours from first render)
     const [expiryTime] = useState(() => {
@@ -526,6 +616,48 @@ function WaitingPaymentView({ amount, paymentResponse, slug, onBack }: { amount:
                 </div>
 
             </div>
+            {/* Bottom Bar for Cancel */}
+            <div className="fixed bottom-[60px] md:bottom-0 left-0 right-0 bg-background/95 backdrop-blur border-t border-border p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-[100]">
+                <div className="container mx-auto max-w-lg md:max-w-2xl flex justify-center md:justify-end">
+                    <button
+                        onClick={() => setShowCancelModal(true)}
+                        className="w-full md:w-auto px-8 py-3.5 rounded-xl font-bold text-destructive bg-destructive/10 hover:bg-destructive/20 transition-all"
+                    >
+                        Batalkan Pembayaran
+                    </button>
+                </div>
+            </div>
+
+            {/* Cancel Confirmation Modal */}
+            {showCancelModal && (
+                <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="bg-card w-full max-w-sm p-6 rounded-2xl shadow-xl scale-100 animate-in zoom-in-95 duration-200 border border-border">
+                        <h3 className="text-lg font-bold text-foreground mb-2">Batalkan Pembayaran?</h3>
+                        <p className="text-sm text-muted-foreground mb-6">
+                            Apakah Anda yakin ingin membatalkan transaksi ini? Kode pembayaran tidak akan berlaku lagi.
+                        </p>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setShowCancelModal(false)}
+                                className="flex-1 py-2.5 rounded-xl font-semibold border border-border hover:bg-muted transition-colors text-foreground"
+                            >
+                                Kembali
+                            </button>
+                            <button
+                                onClick={() => {
+                                    localStorage.removeItem("pending_payment");
+                                    window.dispatchEvent(new Event("pending_payment_updated"));
+                                    onBack();
+                                }}
+                                className="flex-1 py-2.5 rounded-xl font-semibold bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-colors"
+                            >
+                                Ya, Batalkan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 }
