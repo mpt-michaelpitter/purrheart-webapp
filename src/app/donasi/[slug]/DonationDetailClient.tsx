@@ -61,7 +61,7 @@ export default function DonationDetailClient({ data }: { data: any }) {
                 </div>
 
                 {/* Mobile Sticky Bottom CTA */}
-                <div className="fixed bottom-0 left-0 right-0 p-4 border-t border-slate-100 dark:border-slate-800 z-50 md:hidden pb-safe">
+                <div className="fixed bottom-0 left-0 right-0 p-4 border-t border-slate-100  bg-slate-800  dark:border-slate-800 z-50 md:hidden pb-safe">
                     <Link
                         href={`/donasi/${data.slug}/payment`}
                         className="block w-full text-center rounded-2xl bg-purple-600 py-4 text-lg font-bold text-white shadow-xl shadow-purple-200 dark:shadow-none active:scale-95 transition-transform"

@@ -31,8 +31,8 @@ export function Navbar() {
     return (
         <>
             {/* Desktop/Tablet Header */}
-            <header className="sticky top-0 z-50 w-full bg-background border-b  transition-colors duration-300 hidden md:block">
-                <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
+            <header className="sticky top-0 z-50 w-full bg-background border-b border-border transition-colors duration-300 hidden md:block">
+                <div className="container mx-auto flex h-20 items-center justify-between px-4 ">
                     {/* Logo Section */}
                     <Link href="/" className="flex items-center gap-3 group">
                         {/* Logo Icon */}
@@ -43,11 +43,11 @@ export function Navbar() {
 
                         {/* Brand Text */}
                         <div className="flex flex-col justify-center">
-                            <span className="text-2xl font-extrabold tracking-tight  leading-none">purrhearth</span>
+                            <span className="text-2xl font-extrabold tracking-tight  leading-none">purrheart</span>
                             <div className="flex items-center gap-1 mt-0.5">
-                                <span className="text-[10px] text-slate-500 font-medium">Previously</span>
-                                <Heart className="h-2 w-2 fill-slate-500  " />
-                                <span className="text-[10px] text-slate-500 font-bold">WeCare.id</span>
+                                <span className="text-[10px] text-muted-foreground font-medium">Previously</span>
+                                <Heart className="h-2 w-2 fill-muted-foreground  " />
+                                <span className="text-[10px] text-muted-foreground font-bold">WeCare.id</span>
                             </div>
                         </div>
                     </Link>
@@ -55,11 +55,11 @@ export function Navbar() {
                     {/* Search Bar */}
                     <div className="flex max-w-md flex-1 ml-12 relative group">
                         <div className="relative w-full">
-                            <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 group-focus-within:text-purple-600 transition-colors" />
+                            <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" />
                             <input
                                 type="text"
                                 placeholder="Cari donasi, zakat, atau penggalangan..."
-                                className="h-11 w-full rounded-full border border-slate-200 bg-slate-50 px-11 py-1 text-sm outline-none transition-all placeholder:text-slate-400 focus:border-purple-600 focus:bg-white focus:ring-2 focus:ring-purple-100 dark:border-slate-800 dark:bg-slate-900 dark:focus:bg-slate-950"
+                                className="h-11 w-full rounded-full border border-input bg-muted/50 px-11 py-1 text-sm outline-none transition-all placeholder:text-muted-foreground focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20"
                             />
                         </div>
                     </div>
@@ -70,17 +70,17 @@ export function Navbar() {
                             <Link
                                 key={link.name}
                                 href={link.href}
-                                className="px-3 py-2 text-sm font-semibold text-slate-600 hover:text-purple-700 transition-colors rounded-md hover:bg-slate-50  "
+                                className="px-3 py-2 text-sm font-semibold text-muted-foreground hover:text-primary transition-colors rounded-md hover:bg-muted"
                             >
                                 {link.name}
                             </Link>
                         ))}
 
-                        <div className="flex items-center   ml-6 pl-6 border-l border-slate-200 dark:border-slate-800">
+                        <div className="flex items-center ml-6 pl-6 border-l border-border">
                             {mounted && (
                                 <button
                                     onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                                    className="p-2 rounded-full   hover:bg-slate-100 hover:text-purple-700  dark:hover:bg-slate-800 transition-colors"
+                                    className="p-2 rounded-full hover:bg-muted hover:text-primary transition-colors"
                                 >
                                     {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
                                     <span className="sr-only">Toggle theme</span>
@@ -89,13 +89,13 @@ export function Navbar() {
 
                             <Link
                                 href="/login"
-                                className="rounded-full px-6 py-2.5 text-sm font-bold  border border-purple-200 hover:bg-purple-50 transition-colors dark:border-slate-700  dark:hover:bg-slate-800"
+                                className="rounded-full px-6 py-2.5 text-sm font-bold border border-input hover:bg-muted transition-colors ml-4"
                             >
                                 Masuk
                             </Link>
                             <Link
                                 href="/register"
-                                className="rounded-full bg-purple-700 px-6 py-2.5 text-sm font-bold text-white shadow-md shadow-purple-200 hover:bg-purple-800 hover:shadow-lg hover:-translate-y-0.5 transition-all dark:shadow-none"
+                                className="rounded-full bg-primary px-6 py-2.5 text-sm font-bold text-primary-foreground shadow-md shadow-primary/20 hover:bg-primary/90 hover:shadow-lg hover:-translate-y-0.5 transition-all ml-2"
                             >
                                 Daftar
                             </Link>
@@ -104,30 +104,29 @@ export function Navbar() {
                 </div>
             </header>
 
-            {/* Mobile Header - Updated background to match Image 2 */}
+            {/* Mobile Header */}
             {!isDetailPage && (
-                <header className="sticky top-0 z-50 w-full bg-background dark:bg-slate-950 md:hidden pb-4 pt-4 px-4 shadow-sm transition-colors duration-300">
-                    {/* Top Status Bar Area would be here effectively handled by system but we give padding top */}
+                <header className="sticky top-0 z-50 w-full bg-background md:hidden pb-4 pt-4 px-4 shadow-sm transition-colors duration-300">
                     <div className="flex items-center justify-between gap-4">
                         <div className="relative flex-1">
-                            <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+                            <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
                             <input
                                 type="text"
                                 placeholder="Ingin bantu siapa hari ini?"
-                                className="h-11 w-full rounded-2xl border-none bg-white px-10 py-2 text-sm text-slate-900 shadow-sm outline-none placeholder:text-slate-400 focus:ring-0"
+                                className="h-11 w-full rounded-2xl border-none bg-muted/50 px-10 py-2 text-sm text-foreground shadow-sm outline-none placeholder:text-muted-foreground focus:ring-0"
                             />
                         </div>
 
                         <div className="flex items-center gap-2">
                             <Link href="/akun" className="flex-shrink-0">
-                                <div className="h-10 w-10 bg-purple-600 rounded-full flex items-center justify-center text-white shadow-md">
+                                <div className="h-10 w-10 bg-primary rounded-full flex items-center justify-center text-primary-foreground shadow-md">
                                     <User className="h-6 w-6" />
                                 </div>
                             </Link>
                             {mounted && (
                                 <button
                                     onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                                    className="h-10 w-10 rounded-full bg-white/50 flex items-center justify-center text-purple-700 hover:bg-white/80 dark:bg-slate-800 dark:text-slate-400"
+                                    className="h-10 w-10 rounded-full bg-muted flex items-center justify-center text-primary hover:bg-muted/80"
                                 >
                                     {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
                                 </button>

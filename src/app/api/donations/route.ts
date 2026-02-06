@@ -12,14 +12,84 @@ const writeClient = createClient({
     token: process.env.SANITY_API_TOKEN, // Protected by server-side env
 });
 
+// ... imports
+
+// ... writeClient setup
+
+export async function GET(request: Request) {
+    try {
+        const { searchParams } = new URL(request.url);
+        const slug = searchParams.get("slug");
+        const limit = searchParams.get("limit") ? Number(searchParams.get("limit")) : 20;
+
+        let query = `*[_type == "donation" && status == "success"] | order(_createdAt desc)[0...${limit}] {
+            _id,
+            donorName,
+            amount,
+            message,
+            createdAt,
+            "campaign": campaign->title,
+            "campaignSlug": campaign->slug.current
+        }`;
+
+        if (slug) {
+            query = `*[_type == "donation" && status == "success" && campaign->slug.current == "${slug}"] | order(_createdAt desc)[0...${limit}] {
+                _id,
+                donorName,
+                amount,
+                message,
+                createdAt
+            }`;
+        }
+
+        const donations = await writeClient.fetch(query);
+
+        return NextResponse.json({
+            success: true,
+            data: donations
+        });
+    } catch (error) {
+        return NextResponse.json({ error: "Failed to fetch donations" }, { status: 500 });
+    }
+}
+
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { slug, amount, name, message, email, payment_type } = body;
+        let { slug, amount, name, message, email, payment_type } = body;
 
+        // --- SECURITY & VALIDATION START ---
         if (!slug || !amount || !payment_type) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
+
+        // Ensure amount is a number
+        amount = Number(amount);
+
+        // 1. Validate Amount (Must be number and positive)
+        if (typeof amount !== 'number' || isNaN(amount) || amount <= 0) {
+            return NextResponse.json({ error: "Invalid amount" }, { status: 400 });
+        }
+
+        // 2. Sanitize Inputs (XSS Prevention)
+        const { sanitizeInput, isValidEmail } = await import("@/lib/security");
+
+        name = sanitizeInput(name || "Anonim");
+        message = sanitizeInput(message || "");
+        email = email ? sanitizeInput(email) : "donor@example.com";
+        slug = sanitizeInput(slug); // Very important!
+
+        // 3. Validate Email
+        if (email !== "donor@example.com" && !isValidEmail(email)) {
+            return NextResponse.json({ error: "Invalid email format" }, { status: 400 });
+        }
+
+        // 4. Validate Payment Type (Injection Prevention)
+        const validPaymentTypes = ["qris", "bank_transfer", "credit_card"];
+        if (!validPaymentTypes.includes(payment_type)) {
+            return NextResponse.json({ error: "Invalid payment type" }, { status: 400 });
+        }
+        // --- SECURITY & VALIDATION END ---
 
         // 1. Fetch Campaign ID from Slug
         const campaign = await writeClient.fetch(
@@ -39,15 +109,15 @@ export async function POST(request: Request) {
             payment_type: payment_type,
             transaction_details: {
                 order_id: orderId,
-                gross_amount: Number(amount),
+                gross_amount: amount,
             },
             customer_details: {
-                first_name: name || "Anonim",
-                email: email || "donor@example.com",
+                first_name: name,
+                email: email,
             },
             item_details: [{
                 id: slug,
-                price: Number(amount),
+                price: amount,
                 quantity: 1,
                 name: `Donasi - ${slug}`
             }]
@@ -65,8 +135,8 @@ export async function POST(request: Request) {
         // 5. Save to Sanity
         await writeClient.create({
             _type: 'donation',
-            donorName: name || "Anonim",
-            amount: Number(amount),
+            donorName: name,
+            amount: amount,
             email: email,
             message: message,
             campaign: { _type: 'reference', _ref: campaign },
@@ -83,6 +153,6 @@ export async function POST(request: Request) {
 
     } catch (e) {
         console.error("Donation Error:", e);
-        return NextResponse.json({ error: "Internal Server Error", details: e instanceof Error ? e.message : String(e) }, { status: 500 });
+        return NextResponse.json({ error: "Internal Server Error", details: process.env.NODE_ENV === 'development' ? (e instanceof Error ? e.message : String(e)) : undefined }, { status: 500 });
     }
 }

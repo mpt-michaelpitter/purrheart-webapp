@@ -20,7 +20,7 @@ export function MobileBottomNav() {
             icon: PlusSquare,
         },
         {
-            name: "Donasi Saya",
+            name: "Donasi ",
             href: "/donasi-saya",
             icon: Home,
         },

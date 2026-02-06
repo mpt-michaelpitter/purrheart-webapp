@@ -6,6 +6,7 @@ import { Footer } from "@/components/layout/Footer";
 import { MobileBottomNav } from "@/components/layout/MobileBottomNav"; // Import
 import { PendingPaymentBar } from "@/components/donation/PendingPaymentBar";
 import { ThemeProvider } from "@/components/theme-provider";
+import { MainLayoutWrapper } from "@/components/layout/MainLayoutWrapper";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -25,20 +26,21 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id" className={outfit.variable} suppressHydrationWarning>
-      <body className="flex min-h-screen flex-col font-sans transition-colors duration-300">
+      <body className="font-sans transition-colors duration-300">
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >
-          <Navbar />
-          <main className="flex-1 bg-slate-50/50 dark:bg-background pb-20 md:pb-0"> {/* Added pb-20 for mobile bottom nav space */}
+          <MainLayoutWrapper
+            navbar={<Navbar />}
+            footer={<Footer />}
+            mobileNav={<MobileBottomNav />}
+            pendingBar={<PendingPaymentBar />}
+          >
             {children}
-          </main>
-          <Footer />
-          <PendingPaymentBar />
-          <MobileBottomNav />
+          </MainLayoutWrapper>
         </ThemeProvider>
       </body>
     </html>

@@ -86,3 +86,17 @@ body {
   font-family: var(--font-sans, system-ui, sans-serif);
   @apply antialiased transition-colors duration-300;
 }
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari and Opera */
+  }
+}
