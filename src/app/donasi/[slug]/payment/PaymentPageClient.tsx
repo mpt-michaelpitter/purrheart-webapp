@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, use, useEffect } from "react";
-import Link from "next/link";
+
 import { useRouter } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
 import { ArrowLeft, Wallet, UserCircle, MessageSquare, CheckCircle2, Timer, Copy, ChevronDown, ChevronUp, AlertCircle } from "lucide-react";
@@ -48,7 +48,7 @@ export default function PaymentPageClient({ data }: PaymentPageClientProps) {
         if (amount > 100000000) {
             newErrors.amount = "Maksimal donasi Rp 100.000.000";
         }
-       
+
 
         if (amount < 10000) {
             newErrors.amount = "Minimal donasi Rp 10.000";
@@ -126,7 +126,7 @@ export default function PaymentPageClient({ data }: PaymentPageClientProps) {
         }
     };
 
-    
+
     useEffect(() => {
         let interval: NodeJS.Timeout;
 
@@ -371,7 +371,7 @@ export default function PaymentPageClient({ data }: PaymentPageClientProps) {
                         </div>
                     </div>
                     <div className="flex w-full md:w-auto items-center gap-3">
-                      
+
                         <button
                             onClick={handleSubmit}
                             disabled={loading}

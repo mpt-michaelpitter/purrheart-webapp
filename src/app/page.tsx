@@ -3,6 +3,7 @@ import { CategorySection } from "@/components/home/CategorySection";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 
+
 async function getData() {
   // Campaign projection fields (reused to ensure consistency)
   const campaignFields = `
@@ -86,7 +87,7 @@ export default async function Home() {
       ))}
 
       {/* Banner CTA App */}
-      <section className="py-16   border-t border-b border-border">
+      <section className="py-16 bg-[#005450]   border-t border-b border-border">
         <div className="container mx-auto px-4 md:px-6 flex flex-col md:flex-row items-center gap-12">
           <div className="flex-1 relative aspect-square md:aspect-video w-full max-h-[400px] rounded-2xl overflow-hidden shadow-2xl">
             {/* Using a reliable tech/app image */}

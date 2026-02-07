@@ -20,7 +20,7 @@ export function Navbar() {
     const navLinks = [
         { name: "Donasi", href: "/donasi" },
         { name: "Adopsi", href: "/adopsi" },
-        { name: "Relawan", href: "/relawan" },
+        { name: "Tentang Kami", href: "/about" },
         { name: "Amalanku", href: "/amalanku" },
         { name: "Sponsor", href: "/sponsor" },
     ];
@@ -31,7 +31,7 @@ export function Navbar() {
     return (
         <>
             {/* Desktop/Tablet Header */}
-            <header className="sticky top-0 z-50 w-full bg-background border-b border-border transition-colors duration-300 hidden md:block">
+            <header className="sticky top-0 z-50 w-full bg-muted-foreground border-b-4 border-border transition-colors duration-300 hidden md:block dark:bg-background">
                 <div className="container mx-auto flex h-20 items-center justify-between px-4 ">
                     {/* Logo Section */}
                     <Link href="/" className="flex items-center gap-3 group">
@@ -43,23 +43,23 @@ export function Navbar() {
 
                         {/* Brand Text */}
                         <div className="flex flex-col justify-center">
-                            <span className="text-2xl font-extrabold tracking-tight  leading-none">purrheart</span>
-                            <div className="flex items-center gap-1 mt-0.5">
-                                <span className="text-[10px] text-muted-foreground font-medium">Previously</span>
+                            <span className="text-2xl text-background font-extrabold tracking-tight  leading-none dark:text-foreground">purrheart</span>
+                            <div className="flex dark:text-foreground items-center gap-1 mt-0.5">
+                                <span className="text-[10px] text-muted font-medium dark:text-foreground">Previously</span>
                                 <Heart className="h-2 w-2 fill-muted-foreground  " />
-                                <span className="text-[10px] text-muted-foreground font-bold">WeCare.id</span>
+                                <span className="text-[10px] text-muted font-bold dark:text-foreground">WeCare.id</span>
                             </div>
-                        </div>
+                    </div>
                     </Link>
 
                     {/* Search Bar */}
                     <div className="flex max-w-md flex-1 ml-12 relative group">
                         <div className="relative w-full">
-                            <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                            <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted group-focus-within:text-primary transition-colors" />
                             <input
                                 type="text"
                                 placeholder="Cari donasi, zakat, atau penggalangan..."
-                                className="h-11 w-full rounded-full border border-input bg-muted/50 px-11 py-1 text-sm outline-none transition-all placeholder:text-muted-foreground focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20"
+                                className="h-11 w-full rounded-full border border-input bg-muted/50 px-11 py-1 text-sm outline-none transition-all placeholder:text-muted  focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20"
                             />
                         </div>
                     </div>
@@ -70,7 +70,7 @@ export function Navbar() {
                             <Link
                                 key={link.name}
                                 href={link.href}
-                                className="px-3 py-2 text-sm font-semibold text-muted-foreground hover:text-primary transition-colors rounded-md hover:bg-muted"
+                                className="px-3 py-2 text-sm font-semibold text-muted hover:text-foreground transition-colors rounded-md hover:bg-muted dark:text-foreground"
                             >
                                 {link.name}
                             </Link>
@@ -109,11 +109,11 @@ export function Navbar() {
                 <header className="sticky top-0 z-50 w-full bg-background md:hidden pb-4 pt-4 px-4 shadow-sm transition-colors duration-300">
                     <div className="flex items-center justify-between gap-4">
                         <div className="relative flex-1">
-                            <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+                            <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted" />
                             <input
                                 type="text"
                                 placeholder="Ingin bantu siapa hari ini?"
-                                className="h-11 w-full rounded-2xl border-none bg-muted/50 px-10 py-2 text-sm text-foreground shadow-sm outline-none placeholder:text-muted-foreground focus:ring-0"
+                                className="h-11 w-full rounded-2xl border-none bg-muted/50 px-10 py-2 text-sm text-foreground shadow-sm outline-none placeholder:text-muted focus:ring-0"
                             />
                         </div>
 

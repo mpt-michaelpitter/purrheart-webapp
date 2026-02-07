@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Outfit } from "next/font/google"; // Using Outfit as it resembles the font in the image
+import { Poppins, Anton, Alex_Brush } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -8,10 +8,22 @@ import { PendingPaymentBar } from "@/components/donation/PendingPaymentBar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { MainLayoutWrapper } from "@/components/layout/MainLayoutWrapper";
 
-const outfit = Outfit({
+const poppins = Poppins({
   subsets: ["latin"],
   variable: "--font-sans",
-  weight: ["300", "400", "500", "600", "700", "800"],
+  weight: ["300", "400", "500", "600", "700"],
+});
+
+const anton = Anton({
+  subsets: ["latin"],
+  variable: "--font-heading",
+  weight: "400",
+});
+
+const alexBrush = Alex_Brush({
+  subsets: ["latin"],
+  variable: "--font-script",
+  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -25,7 +37,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id" className={outfit.variable} suppressHydrationWarning>
+    <html lang="id" className={`${poppins.variable} ${anton.variable} ${alexBrush.variable}`} suppressHydrationWarning>
       <body className="font-sans transition-colors duration-300">
         <ThemeProvider
           attribute="class"
