@@ -5,7 +5,8 @@ import { donation } from './donation'
 import { banner } from './banner'
 import { user } from './user'
 import { update } from './update'
+import { activityLog } from './activityLog'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-    types: [campaign, category, donation, banner, user, update],
+    types: [campaign, category, donation, banner, user, update, activityLog],
 }
