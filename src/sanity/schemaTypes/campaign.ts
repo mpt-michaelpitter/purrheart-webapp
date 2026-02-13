@@ -35,6 +35,12 @@ export const campaign = defineType({
             },
         }),
         defineField({
+            name: 'imageName',
+            title: 'Image Name (Alt Text)',
+            type: 'string',
+            description: 'Fallback text for the image',
+        }),
+        defineField({
             name: 'targetAmount',
             title: 'Target Amount (Rp)',
             type: 'number',

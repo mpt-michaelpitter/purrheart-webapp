@@ -21,8 +21,8 @@ export const donation = defineType({
             type: 'string',
         }),
         defineField({
-            name: 'message',
-            title: 'Message',
+            name: 'wish',
+            title: 'Wish',
             type: 'text',
         }),
         defineField({
@@ -59,6 +59,17 @@ export const donation = defineType({
             title: 'Created At',
             type: 'datetime',
             initialValue: () => new Date().toISOString(),
+        }),
+        defineField({
+            name: 'phone',
+            title: 'Phone',
+            type: 'string',
+        }),
+        defineField({
+            name: 'isAnonymous',
+            title: 'Is Anonymous',
+            type: 'boolean',
+            initialValue: false,
         }),
     ],
 })
