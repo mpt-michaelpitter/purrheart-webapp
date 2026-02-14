@@ -31,7 +31,7 @@ export default function PaymentPageClient({ data }: PaymentPageClientProps) {
     const [name, setName] = useState("");
     const [contact, setContact] = useState("");
     const [message, setMessage] = useState("");
-    const [paymentMethod, setPaymentMethod] = useState<"qris" | "bank_transfer">("qris");
+    const [paymentMethod, setPaymentMethod] = useState<"qris" | "bank_transfer" | "saweria">("qris");
     const [loading, setLoading] = useState(false);
     const [showCancelModal, setShowCancelModal] = useState(false);
     const [paymentResponse, setPaymentResponse] = useState<any>(null);
@@ -71,9 +71,15 @@ export default function PaymentPageClient({ data }: PaymentPageClientProps) {
     };
 
     const handleSubmit = async () => {
-        if (!validateForm()) {
+        if (paymentMethod !== 'saweria' && !validateForm()) {
             // Scroll to top or first error
             window.scrollTo({ top: 0, behavior: "smooth" });
+            return;
+        }
+
+        if (paymentMethod === "saweria") {
+            // Saweria redirect without params since they are not supported
+            window.open(`https://saweria.co/halopeduli`, '_blank');
             return;
         }
 
@@ -198,42 +204,44 @@ export default function PaymentPageClient({ data }: PaymentPageClientProps) {
 
             <div className="container mx-auto max-w-lg md:max-w-2xl px-4 pt-24 space-y-6">
 
-                {/* Amount Input Section */}
-                <div className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border space-y-4">
-                    <label className="text-sm font-semibold text-muted-foreground">Isi Nominal Donasi</label>
-                    <div className="relative">
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xl font-bold text-muted-foreground">Rp</span>
-                        <input
-                            type="text"
-                            inputMode="numeric"
-                            value={amount ? amount.toLocaleString("id-ID") : ""}
-                            onChange={handleAmountChange}
-                            placeholder="0"
-                            className={cn(
-                                "w-full pl-12 pr-4 py-4 text-3xl font-bold text-foreground bg-background rounded-xl border-none focus:ring-2 focus:ring-primary placeholder:text-muted-foreground transition-all",
-                                errors.amount ? "focus:ring-destructive" : ""
-                            )}
-                        />
-                    </div>
-                    {errors.amount && <p className="text-xs text-destructive font-medium flex items-center gap-1"><AlertCircle className="h-3 w-3" /> {errors.amount}</p>}
-
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                        {PRESET_AMOUNTS.map((preset) => (
-                            <button
-                                key={preset}
-                                onClick={() => setAmount(preset)}
+                {/* Amount Input Section - Hide for Saweria */}
+                {paymentMethod !== 'saweria' && (
+                    <div className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border space-y-4">
+                        <label className="text-sm font-semibold text-muted-foreground">Isi Nominal Donasi</label>
+                        <div className="relative">
+                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xl font-bold text-muted-foreground">Rp</span>
+                            <input
+                                type="text"
+                                inputMode="numeric"
+                                value={amount ? amount.toLocaleString("id-ID") : ""}
+                                onChange={handleAmountChange}
+                                placeholder="0"
                                 className={cn(
-                                    "py-3 px-2 rounded-xl text-sm font-semibold border transition-all",
-                                    amount === preset
-                                        ? "border-primary bg-primary/10 text-primary"
-                                        : "border-border bg-background hover:border-primary/50 text-muted-foreground"
+                                    "w-full pl-12 pr-4 py-4 text-3xl font-bold text-foreground bg-background rounded-xl border-none focus:ring-2 focus:ring-primary placeholder:text-muted-foreground transition-all",
+                                    errors.amount ? "focus:ring-destructive" : ""
                                 )}
-                            >
-                                {preset >= 1000 ? `${preset / 1000}k` : preset}
-                            </button>
-                        ))}
+                            />
+                        </div>
+                        {errors.amount && <p className="text-xs text-destructive font-medium flex items-center gap-1"><AlertCircle className="h-3 w-3" /> {errors.amount}</p>}
+
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            {PRESET_AMOUNTS.map((preset) => (
+                                <button
+                                    key={preset}
+                                    onClick={() => setAmount(preset)}
+                                    className={cn(
+                                        "py-3 px-2 rounded-xl text-sm font-semibold border transition-all",
+                                        amount === preset
+                                            ? "border-primary bg-primary/10 text-primary"
+                                            : "border-border bg-background hover:border-primary/50 text-muted-foreground"
+                                    )}
+                                >
+                                    {preset >= 1000 ? `${preset / 1000}k` : preset}
+                                </button>
+                            ))}
+                        </div>
                     </div>
-                </div>
+                )}
 
                 {/* Payment Method Selection */}
                 <div className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border space-y-4">
@@ -273,92 +281,148 @@ export default function PaymentPageClient({ data }: PaymentPageClientProps) {
                             </div>
                             {paymentMethod === "bank_transfer" && <CheckCircle2 className="h-5 w-5 text-primary" />}
                         </div>
+
+                        <div
+                            onClick={() => setPaymentMethod("saweria")}
+                            className={cn(
+                                "flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all",
+                                paymentMethod === "saweria"
+                                    ? "border-primary bg-primary/5 ring-1 ring-primary"
+                                    : "border-border hover:border-primary/50"
+                            )}
+                        >
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-6 bg-yellow-400 text-black rounded flex items-center justify-center text-[10px] font-bold">SAWER</div>
+                                <span className="font-semibold text-sm">Saweria (OVO, GoPay, Dana, LinkAja, QRIS)</span>
+                            </div>
+                            {paymentMethod === "saweria" && <CheckCircle2 className="h-5 w-5 text-primary" />}
+                        </div>
                     </div>
                 </div>
 
-
-                {/* User Info Section */}
-                <div className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border space-y-6">
-                    <h3 className="font-bold text-foreground flex items-center gap-2">
-                        <UserCircle className="h-5 w-5 text-primary" />
-                        Data Diri
-                    </h3>
-
-                    {!isAnonymous && (
-                        <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
-                            <div>
-                                <label className="text-xs font-semibold text-muted-foreground mb-1 block">Nama Lengkap</label>
-                                <input
-                                    type="text"
-                                    value={name}
-                                    onChange={(e) => {
-                                        setName(e.target.value);
-                                        if (errors.name) setErrors({ ...errors, name: "" });
-                                    }}
-                                    placeholder="Nama Lengkap Anda"
-                                    className={cn(
-                                        "w-full px-4 py-3 rounded-lg border bg-background text-foreground focus:ring-2 focus:border-transparent outline-none transition-all",
-                                        errors.name
-                                            ? "border-destructive focus:ring-destructive"
-                                            : "border-input focus:ring-primary"
-                                    )}
-                                />
-                                {errors.name && <p className="text-xs text-destructive font-medium mt-1">{errors.name}</p>}
+                {/* Saweria Iframe & Helpers */}
+                {paymentMethod === 'saweria' && (
+                    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        {/* Copy Helpers */}
+                        <div className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border space-y-4">
+                            <div className="flex items-center gap-2 mb-2">
+                                <AlertCircle className="h-5 w-5 text-primary" />
+                                <h3 className="font-bold text-foreground">Data untuk Disalin</h3>
                             </div>
-                            <div>
-                                <label className="text-xs font-semibold text-muted-foreground mb-1 block">Nomor Ponsel atau Email</label>
-                                <input
-                                    type="text"
-                                    value={contact}
-                                    onChange={(e) => {
-                                        setContact(e.target.value);
-                                        if (errors.contact) setErrors({ ...errors, contact: "" });
-                                    }}
-                                    placeholder="0812xxxx atau email@contoh.com"
-                                    className={cn(
-                                        "w-full px-4 py-3 rounded-lg border bg-background text-foreground focus:ring-2 focus:border-transparent outline-none transition-all",
-                                        errors.contact
-                                            ? "border-destructive focus:ring-destructive"
-                                            : "border-input focus:ring-primary"
-                                    )}
-                                />
-                                {errors.contact && <p className="text-xs text-destructive font-medium mt-1">{errors.contact}</p>}
+                            <p className="text-sm text-muted-foreground mb-4">
+                                Silakan salin data berikut dan tempel (paste) di formulir Saweria di bawah ini.
+                            </p>
+                            <div className="grid gap-3">
+                                <CopyField label="Nominal Donasi" value={amount.toString()} />
+                                <CopyField label="Nama Pengirim" value={isAnonymous ? "Anonim" : (name || "-")} />
+                                <CopyField label="Pesan Dukungan" value={message || "-"} />
                             </div>
                         </div>
-                    )}
 
-                    <div className="flex items-center justify-between pt-2 border-t border-border">
-                        <span className="text-sm text-muted-foreground">Sembunyikan nama saya (Anonim)</span>
-                        <button
-                            onClick={() => setIsAnonymous(!isAnonymous)}
-                            className={cn(
-                                "w-12 h-6 rounded-full transition-colors relative",
-                                "bg-muted has-[:checked]:bg-primary" // Use a better conditional class
-                            )}
-                            // Reverting to manual conditional class
-                            style={{ backgroundColor: isAnonymous ? "var(--primary)" : "var(--muted)" }}
-                        >
-                            <div className={cn(
-                                "absolute top-1 left-1 h-4 w-4 rounded-full bg-white shadow-sm transition-transform",
-                                isAnonymous ? "translate-x-6" : "translate-x-0"
-                            )} />
-                        </button>
+                        {/* Iframe */}
+                        <div className="bg-white rounded-2xl shadow-lg border border-border overflow-hidden h-[600px] w-full relative">
+                            <iframe
+                                src="https://saweria.co/halopeduli"
+                                className="w-full h-full border-none"
+                                title="Saweria Donation Frame"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation"
+                            />
+                            {/* Overlay to ensure scrolling works but capture implies interaction */}
+                        </div>
+
+                        <div className="text-center">
+                            <p className="text-xs text-muted-foreground mb-2">Jika formulir tidak muncul atau bermasalah:</p>
+                        </div>
                     </div>
-                </div>
+                )}
 
-                {/* Message Section */}
-                <div className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border space-y-4">
-                    <h3 className="font-bold text-foreground flex items-center gap-2">
-                        <MessageSquare className="h-5 w-5 text-primary" />
-                        Dukungan & Doa (Opsional)
-                    </h3>
-                    <textarea
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        placeholder="Tulis doa atau dukungan untuk penggalang dana..."
-                        className="w-full h-32 px-4 py-3 rounded-lg border border-input bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all resize-none"
-                    />
-                </div>
+                {/* User Info Section - Hide for Saweria */}
+                {paymentMethod !== 'saweria' && (
+                    <div className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border space-y-6">
+                        <h3 className="font-bold text-foreground flex items-center gap-2">
+                            <UserCircle className="h-5 w-5 text-primary" />
+                            Data Diri
+                        </h3>
+
+                        {!isAnonymous && (
+                            <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
+                                <div>
+                                    <label className="text-xs font-semibold text-muted-foreground mb-1 block">Nama Lengkap</label>
+                                    <input
+                                        type="text"
+                                        value={name}
+                                        onChange={(e) => {
+                                            setName(e.target.value);
+                                            if (errors.name) setErrors({ ...errors, name: "" });
+                                        }}
+                                        placeholder="Nama Lengkap Anda"
+                                        className={cn(
+                                            "w-full px-4 py-3 rounded-lg border bg-background text-foreground focus:ring-2 focus:border-transparent outline-none transition-all",
+                                            errors.name
+                                                ? "border-destructive focus:ring-destructive"
+                                                : "border-input focus:ring-primary"
+                                        )}
+                                    />
+                                    {errors.name && <p className="text-xs text-destructive font-medium mt-1">{errors.name}</p>}
+                                </div>
+                                <div>
+                                    <label className="text-xs font-semibold text-muted-foreground mb-1 block">Nomor Ponsel atau Email</label>
+                                    <input
+                                        type="text"
+                                        value={contact}
+                                        onChange={(e) => {
+                                            setContact(e.target.value);
+                                            if (errors.contact) setErrors({ ...errors, contact: "" });
+                                        }}
+                                        placeholder="0812xxxx atau email@contoh.com"
+                                        className={cn(
+                                            "w-full px-4 py-3 rounded-lg border bg-background text-foreground focus:ring-2 focus:border-transparent outline-none transition-all",
+                                            errors.contact
+                                                ? "border-destructive focus:ring-destructive"
+                                                : "border-input focus:ring-primary"
+                                        )}
+                                    />
+                                    {errors.contact && <p className="text-xs text-destructive font-medium mt-1">{errors.contact}</p>}
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="flex items-center justify-between pt-2 border-t border-border">
+                            <span className="text-sm text-muted-foreground">Sembunyikan nama saya (Anonim)</span>
+                            <button
+                                onClick={() => setIsAnonymous(!isAnonymous)}
+                                className={cn(
+                                    "w-12 h-6 rounded-full transition-colors relative",
+                                    "bg-muted has-[:checked]:bg-primary" // Use a better conditional class
+                                )}
+                                // Reverting to manual conditional class
+                                style={{ backgroundColor: isAnonymous ? "var(--primary)" : "var(--muted)" }}
+                            >
+                                <div className={cn(
+                                    "absolute top-1 left-1 h-4 w-4 rounded-full bg-white shadow-sm transition-transform",
+                                    isAnonymous ? "translate-x-6" : "translate-x-0"
+                                )} />
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* Message Section - Hide for Saweria */}
+                {paymentMethod !== 'saweria' && (
+                    <div className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border space-y-4">
+                        <h3 className="font-bold text-foreground flex items-center gap-2">
+                            <MessageSquare className="h-5 w-5 text-primary" />
+                            Dukungan & Doa (Opsional)
+                        </h3>
+                        <textarea
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            placeholder="Tulis doa atau dukungan untuk penggalang dana..."
+                            className="w-full h-32 px-4 py-3 rounded-lg border border-input bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all resize-none"
+                        />
+                    </div>
+                )}
             </div>
 
             {/* Bottom Bar */}
@@ -366,8 +430,14 @@ export default function PaymentPageClient({ data }: PaymentPageClientProps) {
                 <div className="container mx-auto max-w-lg md:max-w-2xl flex flex-col md:flex-row items-center justify-between gap-4">
                     <div className="w-full md:w-auto flex justify-between items-center md:block">
                         <div className="md:mb-0">
-                            <p className="text-xs text-muted-foreground font-medium">Total Pembayaran</p>
-                            <p className="text-xl font-bold text-primary">Rp {amount.toLocaleString("id-ID")}</p>
+                            {paymentMethod !== 'saweria' ? (
+                                <>
+                                    <p className="text-xs text-muted-foreground font-medium">Total Pembayaran</p>
+                                    <p className="text-xl font-bold text-primary">Rp {amount.toLocaleString("id-ID")}</p>
+                                </>
+                            ) : (
+                                <p className="text-sm font-bold text-primary">Via Saweria</p>
+                            )}
                         </div>
                     </div>
                     <div className="flex w-full md:w-auto items-center gap-3">
@@ -377,7 +447,7 @@ export default function PaymentPageClient({ data }: PaymentPageClientProps) {
                             disabled={loading}
                             className="flex-[2] md:flex-none md:w-64 bg-primary text-primary-foreground font-bold py-3.5 rounded-xl shadow-lg shadow-purple-200/20 dark:shadow-none hover:bg-primary/90 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center"
                         >
-                            {loading ? "Memproses..." : `Lanjut Bayar`}
+                            {loading ? "Memproses..." : paymentMethod === 'saweria' ? "Buka Saweria" : "Lanjut Bayar"}
                         </button>
                     </div>
                 </div>
@@ -710,4 +780,31 @@ function CountdownDisplay({ targetDate }: { targetDate: Date }) {
             {String(timeLeft.h).padStart(2, '0')}:{String(timeLeft.m).padStart(2, '0')}:{String(timeLeft.s).padStart(2, '0')}
         </p>
     )
+}
+
+function CopyField({ label, value }: { label: string, value: string }) {
+    const [copied, setCopied] = useState(false);
+    const handleCopy = () => {
+        navigator.clipboard.writeText(value);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
+    return (
+        <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg border border-border group hover:border-primary/30 transition-colors">
+            <div className="overflow-hidden mr-3">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold mb-0.5">{label}</p>
+                <p className="text-sm font-semibold truncate font-mono select-all text-primary">{value}</p>
+            </div>
+            <button
+                onClick={handleCopy}
+                className={cn(
+                    "p-2 rounded-md transition-all",
+                    copied ? "bg-primary text-primary-foreground" : "bg-background hover:bg-accent text-muted-foreground hover:text-foreground border border-border"
+                )}
+                title="Salin"
+            >
+                {copied ? <CheckCircle2 className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+            </button>
+        </div>
+    );
 }

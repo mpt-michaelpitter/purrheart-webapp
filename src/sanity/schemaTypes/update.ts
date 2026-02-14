@@ -19,8 +19,7 @@ export const update = defineType({
         defineField({
             name: 'content',
             title: 'Content',
-            type: 'array',
-            of: [{ type: 'block' }],
+            type: 'blockContent',
         }),
         defineField({
             name: 'date',
