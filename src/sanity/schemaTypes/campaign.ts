@@ -75,6 +75,12 @@ export const campaign = defineType({
             title: 'Description',
             type: 'blockContent',
         }),
+        defineField({
+            name: 'saweriaUsername',
+            title: 'Saweria Username',
+            type: 'string',
+            description: 'Username Saweria khusus campaign ini (tanpa @). Jika kosong, pakai default (halopeduli).',
+        }),
     ],
     preview: {
         select: {

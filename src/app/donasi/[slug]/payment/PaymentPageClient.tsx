@@ -19,6 +19,7 @@ interface PaymentPageClientProps {
     data: {
         title: string;
         slug: string;
+        saweriaUsername?: string;
     }
 }
 
@@ -78,8 +79,18 @@ export default function PaymentPageClient({ data }: PaymentPageClientProps) {
         }
 
         if (paymentMethod === "saweria") {
-            // Saweria redirect without params since they are not supported
-            window.open(`https://saweria.co/halopeduli`, '_blank');
+            // Saweria redirect with dynamic username
+            const username = data.saweriaUsername || 'halopeduli';
+            const width = 480;
+            const height = 720;
+            const left = (window.screen.width - width) / 2;
+            const top = (window.screen.height - height) / 2;
+
+            window.open(
+                `https://saweria.co/${username}`,
+                'SaweriaPayment',
+                `width=${width},height=${height},top=${top},left=${left},scrollbars=yes,resizable=yes`
+            );
             return;
         }
 
@@ -300,7 +311,7 @@ export default function PaymentPageClient({ data }: PaymentPageClientProps) {
                     </div>
                 </div>
 
-                {/* Saweria Iframe & Helpers */}
+                {/* Saweria Info & Popup Trigger */}
                 {paymentMethod === 'saweria' && (
                     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                         {/* Copy Helpers */}
@@ -310,29 +321,19 @@ export default function PaymentPageClient({ data }: PaymentPageClientProps) {
                                 <h3 className="font-bold text-foreground">Data untuk Disalin</h3>
                             </div>
                             <p className="text-sm text-muted-foreground mb-4">
-                                Silakan salin data berikut dan tempel (paste) di formulir Saweria di bawah ini.
+                                Silakan salin data berikut dan tempel (paste) di jendela Saweria yang akan terbuka.
                             </p>
                             <div className="grid gap-3">
                                 <CopyField label="Nominal Donasi" value={amount.toString()} />
                                 <CopyField label="Nama Pengirim" value={isAnonymous ? "Anonim" : (name || "-")} />
-                                <CopyField label="Pesan Dukungan" value={message || "-"} />
+                                <CopyField label="Pesan Dukungan" value={`${message || "Semangat!"} #${slug}`} />
                             </div>
                         </div>
 
-                        {/* Iframe */}
-                        <div className="bg-white rounded-2xl shadow-lg border border-border overflow-hidden h-[600px] w-full relative">
-                            <iframe
-                                src="https://saweria.co/halopeduli"
-                                className="w-full h-full border-none"
-                                title="Saweria Donation Frame"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation"
-                            />
-                            {/* Overlay to ensure scrolling works but capture implies interaction */}
-                        </div>
-
-                        <div className="text-center">
-                            <p className="text-xs text-muted-foreground mb-2">Jika formulir tidak muncul atau bermasalah:</p>
+                        <div className="text-center p-4 bg-muted/30 rounded-xl border border-border">
+                            <p className="text-sm text-muted-foreground">
+                                Klik tombol <strong>"Buka Saweria"</strong> di bawah untuk membuka halaman pembayaran (Popup).
+                            </p>
                         </div>
                     </div>
                 )}
