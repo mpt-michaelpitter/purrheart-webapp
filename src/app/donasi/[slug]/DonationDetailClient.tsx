@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { ArrowLeft, Home } from "lucide-react";
 import { useState } from "react";
-import { DonationHero } from "@/components/donation/DonationHero";
 import { DonationMobileHeader } from "@/components/donation/DonationMobileHeader";
 import { DonationTabs, TabType } from "@/components/donation/DonationTabs";
 import { DonationStory, DonationList } from "@/components/donation/DonationContent";
+import { DonationGallery } from "@/components/donation/DonationGallery";
 import { DonationSidebar } from "@/components/donation/DonationSidebar";
 
 export default function DonationDetailClient({ data }: { data: any }) {
@@ -37,7 +37,16 @@ export default function DonationDetailClient({ data }: { data: any }) {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {/* LEFT COLUMN: Main Content */}
                     <div className="md:col-span-2 space-y-6">
-                        <DonationHero imageSrc={data.imageSrc} title={data.title} />
+                        {/* Hero: Gallery Carousel (falls back to mainImage) */}
+                        <DonationGallery
+                            images={
+                                data.images && data.images.length > 0
+                                    ? data.images
+                                    : data.imageSrc
+                                        ? [{ image: null, name: data.title, fallbackSrc: data.imageSrc }]
+                                        : []
+                            }
+                        />
 
                         <DonationMobileHeader
                             title={data.title}

@@ -38,8 +38,17 @@ export const campaign = defineType({
             name: 'imageName',
             title: 'Image Name (Alt Text)',
             type: 'string',
-            description: 'Fallback text for the image',
+            description: 'Fallback text for the main image',
         }),
+        defineField({
+            name: 'galleryFotos',
+            title: 'Gallery Foto',
+            type: 'array',
+            of: [{ type: 'reference', to: [{ type: 'campaignImage' }] }],
+            description: 'Pilih Campaign Image yang termasuk dalam galeri campaign ini',
+        }),
+
+
         defineField({
             name: 'targetAmount',
             title: 'Target Amount (Rp)',

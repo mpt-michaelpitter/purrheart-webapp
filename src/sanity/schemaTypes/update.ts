@@ -13,6 +13,7 @@ export const update = defineType({
         defineField({
             name: 'campaign',
             title: 'Campaign',
+            
             type: 'reference',
             to: [{ type: 'campaign' }],
         }),

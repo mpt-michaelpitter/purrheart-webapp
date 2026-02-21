@@ -52,7 +52,7 @@ export function AboutSection() {
                     </div>
                 </div>
 
-                {/* Visual Divider to white section */}
+                
                
             </div>
 
@@ -166,5 +166,4 @@ export function AboutSection() {
         </section>
     );
 }
-
-// Removing StatCard component since it's no longer used
+ 

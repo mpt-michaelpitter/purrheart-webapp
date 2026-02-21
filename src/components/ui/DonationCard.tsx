@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 interface DonationCardProps {
     id: string;
     slug: string;
-    imageSrc: string;
+    imageSrc?: string | null;
     title: string;
     organizer: string;
     organizerAvatar?: string;
@@ -43,13 +43,19 @@ export function DonationCard({
                 className
             )}
         >
-            <div className="relative aspect-[16/9] w-full overflow-hidden">
-                <Image
-                    src={imageSrc}
-                    alt={title}
-                    fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                />
+            <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted/60">
+                {imageSrc ? (
+                    <Image
+                        src={imageSrc}
+                        alt={title}
+                        fill
+                        className="object-cover object-top transition-transform duration-300 group-hover:scale-105"
+                    />
+                ) : (
+                    <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs">
+                        <span>Belum ada gambar</span>
+                    </div>
+                )}
                 {/* Chips/Badges could go here */}
             </div>
 

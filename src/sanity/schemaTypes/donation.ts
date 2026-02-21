@@ -72,4 +72,22 @@ export const donation = defineType({
             initialValue: false,
         }),
     ],
+    preview: {
+        select: {
+            title: 'donorName',
+            campaignTitle: 'campaign.title',
+            amount: 'amount',
+        },
+        prepare({ title, campaignTitle, amount }) {
+            const formattedAmount = amount
+                ? `Rp ${Number(amount).toLocaleString('id-ID')}`
+                : 'Rp -';
+            return {
+                title: title || 'Anonim',
+                subtitle: campaignTitle
+                    ? `${campaignTitle}, ${formattedAmount}`
+                    : formattedAmount,
+            };
+        },
+    },
 })

@@ -7,37 +7,52 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState, useCallback } from "react";
 
-const banners = [
-    {
-        id: 1,
-        mobile: "/images/banner/1.webp",
-        tablet: "/images/banner/1.webp",
-        desktop: "/images/banner/1.webp",
-        link: "/donasi/bantu-pendidikan",
-        title: "Bantu Pendidikan Anak Bangsa"
-    },
-    {
-        id: 2,
-        mobile: "/images/banner/2.webp",
-        tablet: "/images/banner/2.webp",
-        desktop: "/images/banner/2.webp",
-        link: "/donasi/bencana-alam",
-        title: "Tanggap Bencana Alam"
-    },
-    {
-        id: 3,
-        mobile: "/images/banner/3.webp",
-        tablet: "/images/banner/3.webp",
-        desktop: "/images/banner/3.webp",
-        link: "/donasi/kesehatan-masyarakat",
-        title: "Kesehatan untuk Semua"
-    },
-];
+import { urlFor } from "@/sanity/lib/image";
 
-export function HeroBanner() {
+interface Banner {
+    _id: string;
+    title: string;
+    imageUrl: any;
+    redirectUrl: string;
+}
+
+interface HeroBannerProps {
+    banners?: Banner[];
+}
+
+export function HeroBanner({ banners = [] }: HeroBannerProps) {
     const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
         Autoplay({ delay: 5000 }),
     ]);
+
+    // Default banners fallback
+    const defaultBanners = [
+        {
+            _id: "1",
+            imageUrl: null, // Will be handled to show static path
+            imageSrc: "/images/banner/1.webp",
+            redirectUrl: "/donasi/bantu-pendidikan",
+            title: "Bantu Pendidikan Anak Bangsa"
+        },
+        {
+            _id: "2",
+            imageUrl: null,
+            imageSrc: "/images/banner/2.webp",
+            redirectUrl: "/donasi/bencana-alam",
+            title: "Tanggap Bencana Alam"
+        },
+        {
+            _id: "3",
+            imageUrl: null,
+            imageSrc: "/images/banner/3.webp",
+            redirectUrl: "/donasi/kesehatan-masyarakat",
+            title: "Kesehatan untuk Semua"
+        },
+    ];
+
+    const displayBanners = banners.length > 0 ? banners : defaultBanners;
+
+
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
 
@@ -64,52 +79,30 @@ export function HeroBanner() {
                     ref={emblaRef}
                 >
                     <div className="flex touch-pan-y">
-                        {banners.map((banner) => (
-                            <div
-                                key={banner.id}
-                                className="relative flex-none w-full min-w-0"
-                            >
-                                <Link href={banner.link} className="block relative w-full">
-                                    {/* Mobile Image */}
-                                    <div className="block sm:hidden relative w-full">
+                        {displayBanners.map((banner: any) => {
+                            // Handle image source: Sanity or Static Fallback
+                            const imageSrc = banner.imageUrl
+                                ? urlFor(banner.imageUrl).width(1200).url()
+                                : (banner.imageSrc || "/images/banner/1.webp");
+
+                            return (
+                                <div
+                                    key={banner._id}
+                                    className="relative flex-none w-full min-w-0"
+                                >
+                                    <Link href={banner.redirectUrl || "#"} className="block relative w-full aspect-[21/9] md:aspect-[24/9]">
                                         <Image
-                                            src={banner.mobile}
-                                            alt={banner.title}
-                                            width={0}
-                                            height={0}
-                                            sizes="100vw"
-                                            className="w-full h-auto"
-                                            priority={banner.id === 1}
+                                            src={imageSrc}
+                                            alt={banner.title || "Banner"}
+                                            fill
+                                            className="object-cover"
+                                            priority={true}
+                                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1200px"
                                         />
-                                    </div>
-                                    {/* Tablet Image */}
-                                    <div className="hidden sm:block lg:hidden relative w-full">
-                                        <Image
-                                            src={banner.tablet}
-                                            alt={banner.title}
-                                            width={0}
-                                            height={0}
-                                            sizes="100vw"
-                                            className="w-full h-auto"
-                                            priority={banner.id === 1}
-                                        />
-                                    </div>
-                                    {/* Desktop Image */}
-                                    <div className="hidden lg:block relative w-full">
-                                        <Image
-                                            src={banner.desktop}
-                                            alt={banner.title}
-                                            width={0}
-                                            height={0}
-                                            sizes="100vw"
-                                            className="w-full h-auto"
-                                            priority={banner.id === 1}
-                                        />
-                                    </div>
-                                    {/* No Text Overlay as requested */}
-                                </Link>
-                            </div>
-                        ))}
+                                    </Link>
+                                </div>
+                            )
+                        })}
                     </div>
                 </div>
 
