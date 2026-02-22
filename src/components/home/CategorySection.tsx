@@ -14,7 +14,13 @@ interface CategorySectionProps {
     categoryImage?: any;
 }
 
-export function CategorySection({ title, linkText = "Lihat Semua", linkHref = "#", donations, categoryImage }: CategorySectionProps) {
+export function CategorySection({
+    title,
+    linkText = "Lihat Semua",
+    linkHref = "#",
+    donations,
+    categoryImage,
+}: CategorySectionProps) {
     const scrollContainerRef = React.useRef<HTMLDivElement>(null);
     const [showLeft, setShowLeft] = React.useState(false);
     const [showRight, setShowRight] = React.useState(true);
@@ -26,77 +32,99 @@ export function CategorySection({ title, linkText = "Lihat Semua", linkHref = "#
         setShowRight(scrollLeft < scrollWidth - clientWidth - 10);
     };
 
-    const scroll = (direction: 'left' | 'right') => {
-        if (scrollContainerRef.current) {
-            const scrollAmount = 300;
-            const newScrollLeft = direction === 'left'
-                ? scrollContainerRef.current.scrollLeft - scrollAmount
-                : scrollContainerRef.current.scrollLeft + scrollAmount;
-
-            scrollContainerRef.current.scrollTo({
-                left: newScrollLeft,
-                behavior: 'smooth'
-            });
-        }
+    const scroll = (direction: "left" | "right") => {
+        scrollContainerRef.current?.scrollTo({
+            left: scrollContainerRef.current.scrollLeft + (direction === "left" ? -320 : 320),
+            behavior: "smooth",
+        });
     };
 
     React.useEffect(() => {
         checkScroll();
-        window.addEventListener('resize', checkScroll);
-        return () => window.removeEventListener('resize', checkScroll);
+        window.addEventListener("resize", checkScroll);
+        return () => window.removeEventListener("resize", checkScroll);
     }, [donations]);
 
     return (
-        <section className="py-12 border-b border-border/50 last:border-0">
+        <section className="py-14 border-b border-border/40 last:border-0">
             <div className="container mx-auto px-4 md:px-6">
-                {/* Category Header */}
-                <div className="flex items-center justify-between mb-8">
-                    <h2 className="text-2xl font-bold md:text-3xl">{title}</h2>
+
+                {/* ── Section Header ───────────────────────────────────── */}
+                <div className="flex items-end justify-between mb-8 gap-4">
+                    <div className="space-y-1">
+                        {/* Decorative pip */}
+                        <div className="flex items-center gap-2">
+                            <span className="h-1 w-8 rounded-full bg-primary inline-block" />
+                            <span className="h-1 w-3 rounded-full bg-primary/40 inline-block" />
+                        </div>
+                        <h2 className="text-2xl font-extrabold md:text-3xl tracking-tight text-foreground">
+                            {title}
+                        </h2>
+                    </div>
+
                     <Link
                         href={linkHref}
-                        className="group flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
+                        className="group shrink-0 flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
                     >
                         {linkText}
-                        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                        <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
                     </Link>
                 </div>
 
+                {/* ── Carousel ─────────────────────────────────────────── */}
                 <div className="relative group/carousel">
-                    {/* Left Button */}
+                    {/* Left fade + button */}
                     {showLeft && (
-                        <button
-                            onClick={() => scroll('left')}
-                            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-40 p-3 rounded-full bg-white dark:bg-slate-800 shadow-xl border border-slate-100 dark:border-slate-700 text-slate-700 dark:text-white hover:scale-110 transition-all duration-300 hidden md:flex items-center justify-center"
-                            aria-label="Scroll Left"
-                        >
-                            <ChevronLeft className="h-6 w-6" />
-                        </button>
+                        <>
+                            <div className="absolute left-0 top-0 bottom-4 w-12 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none hidden md:block" />
+                            <button
+                                onClick={() => scroll("left")}
+                                className="absolute -left-5 top-1/2 -translate-y-1/2 z-20 h-10 w-10 rounded-full
+                                           bg-white dark:bg-slate-800 shadow-lg border border-border
+                                           flex items-center justify-center
+                                           hover:scale-110 hover:border-primary/50 hover:shadow-primary/20 hover:shadow-xl
+                                           transition-all duration-200 hidden md:flex"
+                                aria-label="Scroll kiri"
+                            >
+                                <ChevronLeft className="h-5 w-5 text-foreground" />
+                            </button>
+                        </>
                     )}
 
+                    {/* Scroll container */}
                     <div
                         ref={scrollContainerRef}
                         onScroll={checkScroll}
-                        className="flex gap-4 md:gap-6 overflow-x-auto pb-4 snap-x snap-mandatory -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide scroll-smooth"
+                        className="flex gap-4 md:gap-5 overflow-x-auto pb-3 snap-x snap-mandatory
+                                   -mx-4 px-4 md:mx-0 md:px-0
+                                   scrollbar-hide scroll-smooth"
                     >
                         {donations.map((donation) => (
-                            <div key={donation.id} className="min-w-[280px] md:min-w-[320px] snap-center first:pl-0">
-                                <DonationCard
-                                    {...donation}
-                                    className="h-full"
-                                />
+                            <div
+                                key={donation.id}
+                                className="min-w-[260px] md:min-w-[300px] snap-start"
+                            >
+                                <DonationCard {...donation} className="h-full" />
                             </div>
                         ))}
                     </div>
 
-                    {/* Right Button */}
+                    {/* Right fade + button */}
                     {showRight && (
-                        <button
-                            onClick={() => scroll('right')}
-                            className="absolute right-0 border border-purple-600 top-1/2 -translate-y-1/2 translate-x-4 z-40 p-3 rounded-full bg-white dark:bg-slate-800 shadow-xl border border-slate-100 dark:border-slate-700 text-slate-700 dark:text-white hover:scale-110 transition-all duration-300 hidden md:flex items-center justify-center"
-                            aria-label="Scroll Right"
-                        >
-                            <ChevronRight className="h-6 w-6  text-purple-600   " />
-                        </button>
+                        <>
+                            <div className="absolute right-0 top-0 bottom-4 w-12 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none hidden md:block" />
+                            <button
+                                onClick={() => scroll("right")}
+                                className="absolute -right-5 top-1/2 -translate-y-1/2 z-20 h-10 w-10 rounded-full
+                                           bg-white dark:bg-slate-800 shadow-lg border border-border
+                                           flex items-center justify-center
+                                           hover:scale-110 hover:border-primary/50 hover:shadow-primary/20 hover:shadow-xl
+                                           transition-all duration-200 hidden md:flex"
+                                aria-label="Scroll kanan"
+                            >
+                                <ChevronRight className="h-5 w-5 text-primary" />
+                            </button>
+                        </>
                     )}
                 </div>
             </div>

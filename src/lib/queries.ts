@@ -92,7 +92,15 @@ export const campaignDetailQuery = `
         deadline,
         verified,
         description,
-        "updates": [],
+        saweriaUsername,
+        "updates": updates[] {
+            "title": updateTitle,
+            "publishedAt": publishedAt,
+            "content": content
+        },
+        "donorCount": count(
+            *[_type == "donation" && references(^._id) && status == "success"]
+        ),
         "donors": *[_type == "donation" && references(^._id) && status == "success"] | order(_createdAt desc) {
             "name": donorName,
             amount,
@@ -102,3 +110,4 @@ export const campaignDetailQuery = `
         }
     }
 `;
+

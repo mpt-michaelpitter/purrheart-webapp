@@ -2,104 +2,143 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { Users, Clock, ImageOff, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { Campaign } from "@/types";
 
-interface DonationCardProps {
-    id: string;
-    slug: string;
-    imageSrc?: string | null;
-    title: string;
-    organizer: string;
-    organizerAvatar?: string;
-    currentAmount: number;
-    donorCount: number;
-    daysLeft: number;
-    targetAmount?: number;
-    className?: string;
-}
+type DonationCardProps = Campaign & { className?: string };
 
 export function DonationCard({
-    id,
     slug,
     imageSrc,
     title,
     organizer,
-    organizerAvatar,
     currentAmount,
     targetAmount,
     donorCount,
     daysLeft,
+    verified,
     className,
 }: DonationCardProps) {
     const percentage = targetAmount
         ? Math.min((currentAmount / targetAmount) * 100, 100)
         : 0;
 
+    const urgent = daysLeft > 0 && daysLeft <= 7;
+
     return (
         <Link
             href={`/donasi/${slug}`}
             className={cn(
-                "group flex flex-col overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-md transition-all hover:shadow-lg hover:-translate-y-1",
+                // Base
+                "group relative flex flex-col overflow-hidden rounded-2xl bg-card",
+                // Border with gradient on hover
+                "border border-border hover:border-primary/40",
+                // Shadow
+                "shadow-sm hover:shadow-xl hover:shadow-primary/10",
+                // Motion
+                "transition-all duration-300 hover:-translate-y-1.5",
                 className
             )}
         >
-            <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted/60">
+            {/* ── Image ──────────────────────────────────────────────────── */}
+            <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
                 {imageSrc ? (
-                    <Image
-                        src={imageSrc}
-                        alt={title}
-                        fill
-                        className="object-cover object-top transition-transform duration-300 group-hover:scale-105"
-                    />
+                    <>
+                        <Image
+                            src={imageSrc}
+                            alt={title}
+                            fill
+                            className="object-cover object-top transition-transform duration-500 group-hover:scale-110"
+                        />
+                        {/* Dark gradient overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60" />
+                    </>
                 ) : (
-                    <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs">
-                        <span>Belum ada gambar</span>
+                    <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-muted-foreground/50">
+                        <ImageOff className="h-8 w-8" />
+                        <span className="text-[10px]">Belum ada gambar</span>
                     </div>
                 )}
-                {/* Chips/Badges could go here */}
+
+                {/* Badges — overlaid on image */}
+                <div className="absolute top-3 left-3 flex items-center gap-1.5">
+                    {verified && (
+                        <span className="flex items-center gap-1 rounded-full bg-blue-500/90 backdrop-blur-sm px-2 py-0.5 text-[10px] font-bold text-white shadow">
+                            <CheckCircle2 className="h-3 w-3" />
+                            Terverifikasi
+                        </span>
+                    )}
+                    {urgent && (
+                        <span className="rounded-full bg-red-500/90 backdrop-blur-sm px-2 py-0.5 text-[10px] font-bold text-white shadow animate-pulse">
+                            🔥 Segera Berakhir
+                        </span>
+                    )}
+                </div>
+
+                {/* Days left — bottom-right of image */}
+                {daysLeft > 0 && (
+                    <div className="absolute bottom-3 right-3 flex items-center gap-1 rounded-full bg-black/60 backdrop-blur-sm px-2.5 py-1 text-[10px] font-semibold text-white">
+                        <Clock className="h-3 w-3" />
+                        {daysLeft} hari lagi
+                    </div>
+                )}
             </div>
 
-            <div className="flex flex-1 flex-col p-4">
-                <h3 className="mb-2 line-clamp-2 text-base font-bold leading-tight text-foreground group-hover:text-primary transition-colors">
+            {/* ── Content ────────────────────────────────────────────────── */}
+            <div className="flex flex-1 flex-col p-4 gap-3">
+                {/* Organizer */}
+                <div className="flex items-center gap-2">
+                    <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                        <Users className="h-3 w-3 text-primary" />
+                    </div>
+                    <span className="text-[11px] text-muted-foreground font-medium truncate">
+                        {organizer}
+                    </span>
+                </div>
+
+                {/* Title */}
+                <h3 className="text-sm font-bold leading-snug text-foreground line-clamp-2 group-hover:text-primary transition-colors duration-200">
                     {title}
                 </h3>
 
-                <div className="mb-4 flex items-center gap-2 text-xs text-muted-foreground">
-                    <div className="h-5 w-5 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden relative">
-                        {/* Fallback avatar */}
-                        {organizerAvatar ? <Image src={organizerAvatar} alt={organizer} fill /> : null}
-                    </div>
-                    <span>{organizer}</span>
-                </div>
-
-                <div className="mt-auto space-y-3">
-                    <div className="space-y-1">
-                        <div className="flex justify-between text-xs">
-                            <span className="text-muted-foreground">Dana terkumpul</span>
-                        </div>
-                        <div className="h-2 w-full overflow-hidden rounded-full bg-secondary">
-                            <div
-                                className="h-full bg-primary transition-all duration-500 rounded-full"
-                                style={{ width: `${percentage}%` }}
-                            />
-                        </div>
-                    </div>
-
+                {/* Progress */}
+                <div className="mt-auto space-y-2">
+                    {/* Amount */}
                     <div className="flex items-end justify-between">
-                        <div className="flex flex-col">
-                            <span className="text-sm font-bold text-primary">
+                        <div>
+                            <span className="text-base font-extrabold text-primary">
                                 Rp {currentAmount.toLocaleString("id-ID")}
                             </span>
-                            <span className="text-[10px] text-muted-foreground">
-                                {donorCount} Donatur
-                            </span>
+                            {targetAmount && (
+                                <p className="text-[10px] text-muted-foreground">
+                                    dari Rp {targetAmount.toLocaleString("id-ID")}
+                                </p>
+                            )}
                         </div>
-                        <div className="text-[10px] font-medium text-destructive">
-                            {daysLeft} hari lagi
-                        </div>
+                        <span className="text-xs font-semibold text-primary/80">
+                            {percentage < 1 && percentage > 0 ? "<1" : percentage.toFixed(0)}%
+                        </span>
+                    </div>
+
+                    {/* Progress bar with glow */}
+                    <div className="relative h-2 w-full overflow-hidden rounded-full bg-muted">
+                        <div
+                            className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-primary to-purple-400 transition-all duration-700 ease-out"
+                            style={{ width: `${percentage}%` }}
+                        />
+                    </div>
+
+                    {/* Donor count */}
+                    <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                        <Users className="h-3 w-3" />
+                        <span>{donorCount.toLocaleString("id-ID")} donatur</span>
                     </div>
                 </div>
             </div>
+
+            {/* Hover gradient border effect */}
+            <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-transparent group-hover:ring-primary/20 transition-all duration-300" />
         </Link>
     );
 }

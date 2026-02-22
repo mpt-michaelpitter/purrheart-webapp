@@ -87,42 +87,78 @@ interface DonationListProps {
     donors: any[];
 }
 
+
 export function DonationList({ donors }: DonationListProps) {
     return (
-        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-            <h3 className="font-bold text-xl text-foreground mb-4">Para Donatur ({donors.length})</h3>
+        <div className="space-y-5 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <div className="flex items-center gap-2 mb-2">
+                <h3 className="font-bold text-xl text-foreground">Para Donatur</h3>
+                <span className="inline-flex items-center justify-center min-w-[1.5rem] h-6 rounded-full bg-primary/10 text-primary text-xs font-bold px-2">
+                    {donors.length}
+                </span>
+            </div>
 
             {donors && donors.length > 0 ? (
-                <div className="space-y-6">
-                    {donors.map((donor, idx) => (
-                        <div key={idx} className="flex gap-4 p-4 rounded-xl bg-card border border-border">
-                            <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center text-2xl shrink-0">😊</div>
-                            <div className="flex-1">
-                                <div className="flex justify-between items-start">
-                                    <div>
-                                        <p className="font-bold text-foreground">{donor.name}</p>
-                                        <p className="text-xs text-muted-foreground">{new Date(donor.time).toLocaleDateString("id-ID", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                                    </div>
-                                    <span className="font-bold text-primary">Rp {donor.amount.toLocaleString("id-ID")}</span>
+                <div className="space-y-3">
+                    {donors.map((donor, idx) => {
+                        const initials = donor.name
+                            ? donor.name.split(" ").map((w: string) => w[0]).slice(0, 2).join("").toUpperCase()
+                            : "?";
+                        const gradients = [
+                            "from-purple-500 to-indigo-500",
+                            "from-pink-500 to-orange-400",
+                            "from-teal-400 to-cyan-500",
+                            "from-amber-400 to-orange-500",
+                            "from-emerald-400 to-green-500",
+                        ];
+                        const grad = gradients[idx % gradients.length];
+
+                        return (
+                            <div
+                                key={idx}
+                                className="flex gap-4 p-4 rounded-2xl bg-card border border-border hover:border-primary/20 hover:shadow-md transition-all duration-200"
+                            >
+                                {/* Avatar */}
+                                <div className={`h-11 w-11 rounded-full bg-gradient-to-br ${grad} flex items-center justify-center text-white text-sm font-extrabold shrink-0 shadow-sm`}>
+                                    {initials}
                                 </div>
-                                {donor.message && (
-                                    <div className="mt-3 text-sm text-foreground/80 bg-muted/50 p-3 rounded-lg italic border border-border/50">
-                                        "{donor.message}"
+
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-start justify-between gap-2">
+                                        <div>
+                                            <p className="font-bold text-foreground text-sm">{donor.name}</p>
+                                            <p className="text-[11px] text-muted-foreground mt-0.5">
+                                                {new Date(donor.time).toLocaleDateString("id-ID", {
+                                                    weekday: "short", year: "numeric", month: "short", day: "numeric"
+                                                })}
+                                            </p>
+                                        </div>
+                                        <span className="text-sm font-extrabold bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent shrink-0">
+                                            Rp {donor.amount.toLocaleString("id-ID")}
+                                        </span>
                                     </div>
-                                )}
+
+                                    {donor.message && (
+                                        <div className="mt-2.5 text-sm text-foreground/80 bg-muted/40 rounded-xl px-3 py-2 border-l-4 border-primary/40 italic">
+                                            "{donor.message}"
+                                        </div>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             ) : (
-                <div className="text-center py-10 text-muted-foreground">
-                    <p>Belum ada donatur yang bergabung.</p>
-                    <p className="text-sm mt-1">Jadilah orang baik pertama!</p>
+                <div className="flex flex-col items-center justify-center py-14 gap-3 text-center">
+                    <div className="text-5xl">🐱</div>
+                    <p className="font-semibold text-foreground">Belum ada donatur</p>
+                    <p className="text-sm text-muted-foreground">Jadilah orang baik pertama yang berdonasi!</p>
                 </div>
             )}
         </div>
     );
 }
+
 
 export function DonationWithdrawals({ withdrawals }: DonationWithdrawalsProps) {
     return (

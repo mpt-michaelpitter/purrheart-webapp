@@ -2,13 +2,30 @@ import { type SchemaTypeDefinition } from 'sanity'
 import { campaign } from './campaign'
 import { category } from './category'
 import { donation } from './donation'
+import { donationLog } from './donationLog'
 import { banner } from './banner'
+import { company } from './company'
 import { user } from './user'
 import { update } from './update'
 import { blockContent } from './blockContent'
-
 import { campaignImage } from './campaignImage'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-    types: [campaign, category, donation, banner, user, update, blockContent, campaignImage],
+    types: [
+        // ── Content ───────────────────────────────
+        campaign,
+        category,
+        banner,
+        company,
+
+        // ── Donations ─────────────────────────────
+        donation,
+        donationLog,
+
+        // ── Supporting ────────────────────────────
+        update,
+        campaignImage,
+        blockContent,
+        user,
+    ],
 }

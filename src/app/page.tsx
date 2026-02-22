@@ -1,5 +1,13 @@
 import { HeroBanner } from "@/components/home/HeroBanner";
+import { HeroSection } from "@/components/home/HeroSection";
+import { AboutSection } from "@/components/home/AboutSection";
 import { CategorySection } from "@/components/home/CategorySection";
+import { AdoptionSection } from "@/components/home/AdoptionSection";
+import { OtaSection } from "@/components/home/OtaSection";
+import { MascotSection } from "@/components/home/MascotSection";
+import { HowToHelpSection } from "@/components/home/HowToHelpSection";
+import { FaqSection } from "@/components/home/FaqSection";
+import { ContactSection } from "@/components/home/ContactSection";
 import { client } from "@/sanity/lib/client";
 import { formatCampaign, categoryToBannerSlide } from "@/lib/formatters";
 import {
@@ -18,7 +26,6 @@ async function getHomeData() {
     client.fetch(bannersQuery, {}, { cache: "no-store" }),
   ]);
 
-  // Category images also appear as HeroBanner slides (1 category = 1 slide)
   const categoryBannerSlides: Banner[] = (categories as Category[])
     .filter((c) => c.image)
     .map(categoryToBannerSlide);
@@ -39,17 +46,24 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen">
+
+      {/* 1. Hero Banner (carousel from Sanity) */}
       <HeroBanner banners={banners} />
 
-      {/* Latest campaigns (cross-category) */}
+      {/* 2. Hero Section — Purrheart headline + CTA */}
+      <HeroSection />
+
+      {/* 3. About Purrheart — Timeline 2005 → 2014 → Sekarang */}
+      
+      {/* 4. Latest Campaigns */}
       <CategorySection
-        title="Program Donasi Terbaru"
+        title="Campaign Purrheart"
         donations={latest.map(formatCampaign)}
         linkHref="/donasi"
         linkText="Lihat Semua"
       />
 
-      {/* One section per category */}
+      {/* 5. Per-category sections */}
       {categories.map((category: Category) => (
         <CategorySection
           key={category._id}
@@ -59,6 +73,25 @@ export default async function HomePage() {
           linkText={`Lihat ${category.name}`}
         />
       ))}
+
+      {/* 6. How You Can Help */}
+      <HowToHelpSection />
+
+      {/* 7. Adoption */}
+      <AdoptionSection />
+
+      {/* 8. Orang Tua Asuh */}
+      <OtaSection />
+
+      {/* 9. Mascot — Bakkien's Story */}
+      <MascotSection />
+
+      {/* 10. FAQ */}
+      <FaqSection />
+
+      {/* 11. Contact */}
+      <ContactSection />
+
     </div>
   );
 }
