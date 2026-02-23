@@ -2,94 +2,151 @@
 
 import Link from "next/link";
 import { ArrowRight, Heart, Repeat2, Home, Baby, Package } from "lucide-react";
+import { motion } from "framer-motion";
+import { fadeUp, cardStagger, fadeIn, hoverLift, tapPress, viewport } from "@/lib/animations";
 
 const ways = [
     {
-        icon: Heart,
-        title: "Donasi Sekali",
-        description: "Bantu langsung kebutuhan mendesak shelter sesuai kemampuanmu.",
-        href: "/donasi",
-        color: "text-red-500",
-        bg: "bg-red-500/10",
+        title: "Tentang Kami",
+        href: "/about",
+        image: "https://plus.unsplash.com/premium_photo-1707353401897-da9ba223f807?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8Y2F0fGVufDB8fDB8fHww",
+        color: "bg-emerald-500",
+        pathColor: "fill-emerald-500"
     },
     {
-        icon: Repeat2,
-        title: "Donasi Rutin",
-        description: "Komitmen bulanan yang memastikan shelter berjalan berkelanjutan.",
+        title: "Donasi",
         href: "/donasi",
-        color: "text-primary",
-        bg: "bg-primary/10",
+        image: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=800&auto=format&fit=crop",
+        color: "bg-blue-500",
+        pathColor: "fill-blue-500"
     },
     {
-        icon: Home,
         title: "Adopsi",
-        description: "Buka pintu rumahmu untuk satu nyawa yang membutuhkan.",
         href: "/adopsi",
-        color: "text-green-500",
-        bg: "bg-green-500/10",
+        image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=800&auto=format&fit=crop",
+        color: "bg-rose-500",
+        pathColor: "fill-rose-500"
     },
     {
-        icon: Baby,
         title: "Orang Tua Asuh",
-        description: "Rawat kucing pilihanmu dari jauh — tanpa perlu membawanya pulang.",
-        href: "#ota",
-        color: "text-amber-500",
-        bg: "bg-amber-500/10",
+        href: "/adopsi#ota",
+        image: "https://images.unsplash.com/photo-1511044568932-338cba0ad803?q=80&w=800&auto=format&fit=crop",
+        color: "bg-amber-500",
+        pathColor: "fill-amber-500"
     },
     {
-        icon: Package,
         title: "Donasi Barang",
-        description: "Makanan, vitamin, pasir kucing, atau perlengkapan shelter.",
         href: "https://wa.me/6281216007070",
-        color: "text-blue-500",
-        bg: "bg-blue-500/10",
+        image: "https://images.unsplash.com/photo-1592194996308-7b43878e84a6?q=80&w=800&auto=format&fit=crop",
+        color: "bg-violet-500",
+        pathColor: "fill-violet-500"
     },
 ];
 
 export function HowToHelpSection() {
     return (
-        <section id="bantu" className="py-20 bg-muted/20">
-            <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-                <div className="text-center mb-14">
-                    <h2 className="text-3xl md:text-5xl font-extrabold text-foreground mb-4">
-                        Cara Kamu Bisa Membantu
+        <section id="bantu" className="relative overflow-hidden bg-background py-20">
+            {/* Ambient glow */}
+            <div className="absolute left-1/2 -translate-x-1/2 top-0 h-64 w-1/2 bg-primary/5 blur-3xl rounded-full pointer-events-none" />
+
+            <div className="w-full relative z-10">
+
+                {/* Header */}
+                <motion.div
+                    variants={fadeUp}
+                    initial="hidden"
+                    whileInView="show"
+                    viewport={viewport}
+                    className="text-center mb-16"
+                >
+                    <div className="inline-flex items-center rounded-full bg-primary/10 px-4  text-xs font-bold uppercase tracking-widest text-primary mb-4">
+                        <Heart className="h-3 w-3" />
+                        CARA MEMBANTU
+                    </div>
+                    <h2 className="text-3xl md:text-5xl font-black text-foreground mb-4">
+                        Pilih Cara yang <span className="text-primary">Paling Sesuai.</span>
                     </h2>
-                    <p className="text-muted-foreground max-w-xl mx-auto text-base md:text-lg">
-                        Ada banyak cara untuk ikut peduli. Pilih cara yang paling sesuai dengan kemampuanmu.
+                    <p className="text-muted-foreground max-w-md mx-auto text-sm md:text-base">
+                        Ada banyak cara untuk ikut peduli. Setiap bentuk kepedulian membuat perbedaan nyata bagi mereka.
                     </p>
-                </div>
+                </motion.div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+                {/* Cards Grid — Seamless & Edge-to-Edge */}
+                <motion.div
+                    variants={cardStagger}
+                    initial="hidden"
+                    whileInView="show"
+                    viewport={viewport}
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 mb-16"
+                >
                     {ways.map((way) => (
-                        <Link
-                            key={way.title}
-                            href={way.href}
-                            className="group flex flex-col items-start gap-4 rounded-2xl border border-border bg-card p-6 hover:border-primary/30 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
-                        >
-                            <div className={`h-11 w-11 rounded-2xl ${way.bg} flex items-center justify-center`}>
-                                <way.icon className={`h-5 w-5 ${way.color}`} />
-                            </div>
-                            <div>
-                                <h3 className="font-bold text-foreground text-sm group-hover:text-primary transition-colors">
-                                    {way.title}
-                                </h3>
-                                <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-                                    {way.description}
-                                </p>
-                            </div>
-                        </Link>
-                    ))}
-                </div>
+                        <motion.div key={way.title} variants={fadeUp} whileHover={{ zIndex: 20 }}>
+                            <Link
+                                href={way.href}
+                                className="group relative block aspect-[4/5] overflow-hidden transition-all duration-500"
+                            >
+                                {/* Background Image */}
+                                <img
+                                    src={way.image}
+                                    alt={way.title}
+                                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                />
+                                {/* Overlay */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-60 transition-opacity group-hover:opacity-40" />
 
-                <div className="mt-10 text-center">
-                    <Link
-                        href="/donasi"
-                        className="group inline-flex items-center gap-2 rounded-full bg-primary px-8 py-4 font-bold text-primary-foreground shadow-lg shadow-primary/20 hover:-translate-y-0.5 hover:shadow-xl transition-all duration-200"
-                    >
-                        Lihat Kebutuhan Shelter
-                        <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                    </Link>
-                </div>
+                                {/* Organic Label at bottom */}
+                                <div className="absolute inset-x-0 bottom-0">
+                                    {/* Organic Top Edge (SVG) */}
+                                    <svg
+                                        viewBox="0 0 400 60"
+                                        preserveAspectRatio="none"
+                                        className={`absolute bottom-[calc(100%-1px)] left-0 w-full h-14 ${way.pathColor} transition-transform duration-300 group-hover:scale-y-110 origin-bottom`}
+                                    >
+                                        <path d="M0,60 C40,25 100,55 160,35 C220,15 280,45 340,30 C380,20 400,40 400,40 V60 H0 Z" />
+                                    </svg>
+
+                                    {/* Label Body */}
+                                    <div className={`${way.color} py-6 px-6 text-center relative`}>
+                                        <span className="text-white text-xl font-black tracking-tight leading-none block drop-shadow-sm">
+                                            {way.title}
+                                        </span>
+                                        <div className="mt-3 flex items-center justify-center gap-1.5 text-white/90 text-xs font-black uppercase tracking-widest translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                                            Eksplorasi
+                                            <ArrowRight className="h-3.5 w-3.5" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </Link>
+                        </motion.div>
+                    ))}
+                </motion.div>
+
+                {/* Main CTAs */}
+                <motion.div
+                    variants={fadeUp}
+                    initial="hidden"
+                    whileInView="show"
+                    viewport={viewport}
+                    className="flex flex-col sm:flex-row items-center justify-center gap-4"
+                >
+                    <motion.div whileHover={hoverLift} whileTap={tapPress}>
+                        <Link
+                            href="/donasi"
+                            className="group w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-primary px-10 py-4 font-bold text-white shadow-xl shadow-primary/20 hover:shadow-primary/40 transition-shadow duration-200"
+                        >
+                            Lihat Semua Kebutuhan
+                            <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                        </Link>
+                    </motion.div>
+                    <motion.div whileHover={hoverLift} whileTap={tapPress}>
+                        <Link
+                            href="/adopsi"
+                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full border border-border px-10 py-4 font-semibold text-foreground hover:bg-muted transition-colors duration-200 text-sm"
+                        >
+                            Adopsi Kucing
+                        </Link>
+                    </motion.div>
+                </motion.div>
             </div>
         </section>
     );

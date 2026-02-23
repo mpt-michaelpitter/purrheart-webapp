@@ -9,6 +9,7 @@ import { user } from './user'
 import { update } from './update'
 import { blockContent } from './blockContent'
 import { campaignImage } from './campaignImage'
+import { adopsiKucing } from './adopsiKucing'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
     types: [
@@ -17,6 +18,9 @@ export const schema: { types: SchemaTypeDefinition[] } = {
         category,
         banner,
         company,
+
+        // ── Adopsi ────────────────────────────────
+        adopsiKucing,
 
         // ── Donations ─────────────────────────────
         donation,

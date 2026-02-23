@@ -27,7 +27,7 @@ export const CAMPAIGN_CARD_FIELDS = `
     verified
 `;
 
-// ── Full Queries ──────────────────────────────────────────────────────────────
+// ── Campaign Queries ──────────────────────────────────────────────────────────
 
 /** Latest N campaigns globally, newest first */
 export const latestCampaignsQuery = (limit = 4) =>
@@ -111,3 +111,69 @@ export const campaignDetailQuery = `
     }
 `;
 
+// ── Adopsi Kucing Queries ──────────────────────────────────────────────────────
+
+/** Shared projection for adoptable cat card fields */
+const CAT_CARD_PROJECTION = `
+    _id,
+    name,
+    "slug": slug.current,
+    gender,
+    ageText,
+    colorPattern,
+    healthStatus,
+    healthNote,
+    isVaccinated,
+    isSterilized,
+    specialNeeds,
+    personalityTags,
+    adoptionStatus,
+    isUrgent,
+    publishedAt,
+    "mainPhoto": mainPhoto {
+        asset,
+        hotspot,
+        crop,
+        alt
+    }
+`;
+
+/**
+ * All available cats (excludes adopted / unavailable).
+ * Ordered: urgent first → newest first.
+ */
+export const adopsiCatsQuery = `
+    *[_type == "adopsiKucing"
+        && adoptionStatus != "diadopsi"
+        && adoptionStatus != "tidak_tersedia"
+    ] | order(isUrgent desc, publishedAt desc) {
+        ${CAT_CARD_PROJECTION}
+    }
+`;
+
+/**
+ * Cats filtered by a specific adoption status.
+ * @param status  'siap' | 'khusus' | 'proses'
+ */
+export const adopsiCatsByStatusQuery = (status: string) => `
+    *[_type == "adopsiKucing" && adoptionStatus == "${status}"]
+    | order(isUrgent desc, publishedAt desc) {
+        ${CAT_CARD_PROJECTION}
+    }
+`;
+
+/**
+ * Single cat profile by slug — includes gallery + full bio.
+ */
+export const adopsiCatDetailQuery = `
+    *[_type == "adopsiKucing" && slug.current == $slug][0] {
+        ${CAT_CARD_PROJECTION},
+        "gallery": gallery[] {
+            asset,
+            hotspot,
+            crop,
+            alt
+        },
+        bio
+    }
+`;

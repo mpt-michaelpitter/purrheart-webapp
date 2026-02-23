@@ -1,110 +1,139 @@
 "use client";
 
 import Link from "next/link";
-import { MapPin, Phone, Instagram, ArrowRight } from "lucide-react";
+import { MapPin, Phone, Instagram, ArrowRight, MessageCircle, Mail, Heart, MessageSquare } from "lucide-react";
+import { motion } from "framer-motion";
+import { fadeUp, fadeLeft, fadeRight, hoverLift, tapPress, viewport } from "@/lib/animations";
+import { PawPattern } from "@/components/ui/paw-pattern";
 
 export function ContactSection() {
     return (
-        <section id="kontak" className="py-20 bg-gradient-to-b from-muted/30 to-background">
-            <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-                <div className="text-center mb-12">
-                    <h2 className="text-3xl md:text-4xl font-extrabold text-foreground mb-3">
-                        Hubungi Kami
+        <section id="kontak" className="relative py-20 bg-[#562c72] overflow-hidden">
+            <PawPattern className="text-white opacity-5" />
+
+            <div className="container mx-auto px-4 md:px-6 max-w-5xl relative z-10">
+
+                {/* Header */}
+                <motion.div
+                    variants={fadeUp}
+                    initial="hidden"
+                    whileInView="show"
+                    viewport={viewport}
+                    className="text-center mb-16"
+                >
+                    <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-[#fdc65c] mb-4 border border-white/10 backdrop-blur-sm">
+                        <MessageCircle className="h-3 w-3" />
+                        HUBUNGI KAMI
+                    </div>
+                    <h2 className="text-3xl md:text-5xl font-extrabold text-white">
+                        Punya Pertanyaan? <span className="text-[#fdc65c]">Kami Siap Membantu.</span>
                     </h2>
-                    <p className="text-muted-foreground max-w-lg mx-auto">
-                        Ingin bertanya atau membantu lebih lanjut? Kami siap menyambut kamu.
-                    </p>
-                </div>
+                </motion.div>
 
-                <div className="grid md:grid-cols-2 gap-8">
-                    {/* Contact info */}
-                    <div className="rounded-3xl border border-border bg-card p-8 space-y-5">
-                        <h3 className="font-bold text-lg text-foreground">Info Kontak</h3>
-
-                        <div className="space-y-4">
-                            <div className="flex items-start gap-4">
-                                <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                                    <MapPin className="h-5 w-5 text-primary" />
-                                </div>
-                                <div>
-                                    <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Alamat</p>
-                                    <p className="text-sm text-foreground leading-relaxed">
-                                        Jl. Tinta, Sei Putih Baru, Kec. Medan Petisah,
-                                        <br />Kota Medan, Sumatera Utara 20118
-                                        <br /><span className="text-muted-foreground">(Samping Grace Studio)</span>
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="flex items-start gap-4">
-                                <div className="h-10 w-10 rounded-xl bg-green-500/10 flex items-center justify-center shrink-0">
-                                    <Phone className="h-5 w-5 text-green-500" />
-                                </div>
-                                <div>
-                                    <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">WhatsApp (Ci Mimi)</p>
-                                    <Link
-                                        href="https://wa.me/6281216007070"
-                                        target="_blank"
-                                        className="text-sm font-semibold text-green-600 dark:text-green-400 hover:underline"
-                                    >
-                                        +62 812-1600-707
-                                    </Link>
-                                </div>
-                            </div>
-
-                            <div className="flex items-start gap-4">
-                                <div className="h-10 w-10 rounded-xl bg-pink-500/10 flex items-center justify-center shrink-0">
-                                    <Instagram className="h-5 w-5 text-pink-500" />
-                                </div>
-                                <div>
-                                    <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Sosial Media</p>
-                                    <Link
-                                        href="https://instagram.com/pedulikucing71"
-                                        target="_blank"
-                                        className="text-sm font-semibold text-pink-600 dark:text-pink-400 hover:underline block"
-                                    >
-                                        @pedulikucing71 (Instagram)
-                                    </Link>
-                                    <Link
-                                        href="https://tiktok.com/@purrheart"
-                                        target="_blank"
-                                        className="text-sm font-semibold text-foreground hover:underline block mt-1"
-                                    >
-                                        @purrheart (TikTok)
-                                    </Link>
-                                </div>
+                <div className="grid md:grid-cols-2 gap-8 items-start">
+                    {/* Contact Info */}
+                    <motion.div
+                        variants={fadeLeft}
+                        initial="hidden"
+                        whileInView="show"
+                        viewport={viewport}
+                        className="space-y-6"
+                    >
+                        <div className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md p-8 shadow-xl">
+                            <h3 className="text-xl font-bold text-white mb-6">Informasi Kontak</h3>
+                            <div className="space-y-6">
+                                {[
+                                    {
+                                        icon: MapPin,
+                                        label: "Lokasi Shelter",
+                                        value: "Medan, Sumatera Utara, Indonesia",
+                                        color: "text-red-400",
+                                    },
+                                    {
+                                        icon: Phone,
+                                        label: "WhatsApp",
+                                        value: "+62 812-1600-7070",
+                                        color: "text-[#fdc65c]",
+                                        href: "https://wa.me/6281216007070",
+                                    },
+                                    {
+                                        icon: Mail,
+                                        label: "Email",
+                                        value: "halo@purrheart.id",
+                                        color: "text-blue-400",
+                                    },
+                                ].map((item) => (
+                                    <div key={item.label} className="flex gap-4 group">
+                                        <div className="h-12 w-12 rounded-xl bg-white/10 flex items-center justify-center shrink-0 group-hover:bg-white/20 transition-colors">
+                                            <item.icon className={`h-6 w-6 ${item.color}`} />
+                                        </div>
+                                        <div>
+                                            <p className="text-xs uppercase tracking-wider text-purple-200/50 font-bold mb-1">{item.label}</p>
+                                            {item.href ? (
+                                                <a href={item.href} className="text-white font-medium hover:text-[#fdc65c] transition-colors">
+                                                    {item.value}
+                                                </a>
+                                            ) : (
+                                                <p className="text-white font-medium">{item.value}</p>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
-                    </div>
 
-                    {/* CTA visit + message */}
-                    <div className="rounded-3xl border border-border bg-gradient-to-br from-[#562c72]/5 to-purple-400/5 p-8 flex flex-col justify-between gap-8">
-                        <div>
-                            <h3 className="font-bold text-lg text-foreground mb-3">Rencanakan Kunjungan</h3>
-                            <p className="text-sm text-muted-foreground leading-relaxed">
-                                Ingin melihat langsung kucing-kucing kami? Hubungi kami terlebih dahulu untuk konfirmasi
-                                jadwal kunjungan ke shelter.
+                        {/* Social Link */}
+                        <motion.div whileHover={hoverLift} whileTap={tapPress}>
+                            <Link
+                                href="https://instagram.com/pedulikucing71"
+                                target="_blank"
+                                className="flex items-center justify-between rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 p-6 text-white shadow-lg"
+                            >
+                                <div className="flex items-center gap-4">
+                                    <div className="h-12 w-12 rounded-xl bg-white/20 flex items-center justify-center">
+                                        <Instagram className="h-6 w-6" />
+                                    </div>
+                                    <div>
+                                        <p className="font-bold">Ikuti Kami di Instagram</p>
+                                        <p className="text-xs text-white/70">Update harian dari shelter @pedulikucing71</p>
+                                    </div>
+                                </div>
+                                <ArrowRight className="h-5 w-5" />
+                            </Link>
+                        </motion.div>
+                    </motion.div>
+
+                    {/* Simple Message Card */}
+                    <motion.div
+                        variants={fadeRight}
+                        initial="hidden"
+                        whileInView="show"
+                        viewport={viewport}
+                    >
+                        <div className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md p-8 shadow-xl relative overflow-hidden">
+                            <div className="absolute -right-8 -bottom-8 h-32 w-32 rounded-full bg-[#fdc65c]/10 blur-2xl" />
+
+                            <h3 className="text-xl font-bold text-white mb-4">Ingin Berkunjung atau Donasi Offline?</h3>
+                            <p className="text-purple-100/70 text-sm leading-relaxed mb-6">
+                                Pintu kami selalu terbuka untuk mereka yang ingin mengenal kucing-kucing kami lebih dekat.
+                                Silakan hubungi kami via WhatsApp untuk membuat janji temu atau menanyakan detail prosedur donasi barang/pakan.
+                            </p>
+
+                            <motion.div whileHover={hoverLift} whileTap={tapPress}>
+                                <Link
+                                    href="https://wa.me/6281216007070"
+                                    className="group flex items-center justify-center gap-3 w-full rounded-2xl bg-[#fdc65c] py-4 text-sm font-black text-[#562c72] shadow-lg shadow-[#fdc65c]/20 hover:shadow-xl transition-all"
+                                >
+                                    <MessageSquare className="h-5 w-5" />
+                                    Hubungi Via WhatsApp
+                                </Link>
+                            </motion.div>
+
+                            <p className="text-center text-[10px] text-purple-200/40 mt-4 uppercase tracking-widest font-medium">
+                                Operasional: Senin - Minggu | 09:00 - 17:00 WIB
                             </p>
                         </div>
-
-                        <div className="space-y-3">
-                            <Link
-                                href="https://wa.me/6281216007070?text=Halo%20Purrheart!%20Saya%20ingin%20bertanya%20tentang%20shelter."
-                                target="_blank"
-                                className="group flex items-center justify-center gap-2 w-full rounded-xl bg-green-500 py-3.5 font-bold text-white hover:bg-green-600 hover:-translate-y-0.5 shadow-lg shadow-green-500/20 transition-all duration-200"
-                            >
-                                Tanya Tim Purrheart
-                                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                            </Link>
-                            <Link
-                                href="https://wa.me/6281216007070?text=Halo%20Purrheart!%20Saya%20ingin%20mengunjungi%20shelter."
-                                target="_blank"
-                                className="flex items-center justify-center gap-2 w-full rounded-xl border border-border py-3.5 font-semibold text-foreground hover:bg-muted transition-colors text-sm"
-                            >
-                                Rencanakan Kunjungan
-                            </Link>
-                        </div>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
         </section>

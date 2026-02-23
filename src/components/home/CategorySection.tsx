@@ -3,7 +3,9 @@
 import React from "react";
 import Link from "next/link";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { motion } from "framer-motion";
 import { DonationCard } from "@/components/ui/DonationCard";
+import { fadeUp, cardStagger, viewport } from "@/lib/animations";
 import type { Campaign } from "@/types";
 
 interface CategorySectionProps {
@@ -47,10 +49,16 @@ export function CategorySection({
 
     return (
         <section className="py-14 border-b border-border/40 last:border-0">
-            <div className="container mx-auto px-4 md:px-6">
+            <div className="w-full px-4 md:px-8">
 
                 {/* ── Section Header ───────────────────────────────────── */}
-                <div className="flex items-end justify-between mb-8 gap-4">
+                <motion.div
+                    variants={fadeUp}
+                    initial="hidden"
+                    whileInView="show"
+                    viewport={viewport}
+                    className="flex items-end justify-between mb-8 gap-4"
+                >
                     <div className="space-y-1">
                         {/* Decorative pip */}
                         <div className="flex items-center gap-2">
@@ -69,7 +77,7 @@ export function CategorySection({
                         {linkText}
                         <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
                     </Link>
-                </div>
+                </motion.div>
 
                 {/* ── Carousel ─────────────────────────────────────────── */}
                 <div className="relative group/carousel">
@@ -92,22 +100,27 @@ export function CategorySection({
                     )}
 
                     {/* Scroll container */}
-                    <div
+                    <motion.div
                         ref={scrollContainerRef}
                         onScroll={checkScroll}
+                        variants={cardStagger}
+                        initial="hidden"
+                        whileInView="show"
+                        viewport={viewport}
                         className="flex gap-4 md:gap-5 overflow-x-auto pb-3 snap-x snap-mandatory
                                    -mx-4 px-4 md:mx-0 md:px-0
                                    scrollbar-hide scroll-smooth"
                     >
                         {donations.map((donation) => (
-                            <div
+                            <motion.div
                                 key={donation.id}
+                                variants={fadeUp}
                                 className="min-w-[260px] md:min-w-[300px] snap-start"
                             >
                                 <DonationCard {...donation} className="h-full" />
-                            </div>
+                            </motion.div>
                         ))}
-                    </div>
+                    </motion.div>
 
                     {/* Right fade + button */}
                     {showRight && (

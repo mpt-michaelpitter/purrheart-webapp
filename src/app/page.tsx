@@ -21,8 +21,8 @@ import type { Category, Banner } from "@/types";
 
 async function getHomeData() {
   const [latest, categories, banners] = await Promise.all([
-    client.fetch(latestCampaignsQuery(4), {}, { cache: "no-store" }),
-    client.fetch(categoriesWithCampaignsQuery(8), {}, { cache: "no-store" }),
+    client.fetch(latestCampaignsQuery(6), {}, { cache: "no-store" }),
+    client.fetch(categoriesWithCampaignsQuery(6), {}, { cache: "no-store" }),
     client.fetch(bannersQuery, {}, { cache: "no-store" }),
   ]);
 
@@ -47,23 +47,21 @@ export default async function HomePage() {
   return (
     <div className="flex flex-col min-h-screen">
 
-      {/* 1. Hero Banner (carousel from Sanity) */}
-      <HeroBanner banners={banners} />
+      {/* ① Banner carousel from Sanity — only shown if banners exist */}
+      {banners.length > 0 && <HeroBanner banners={banners} />}
 
-      {/* 2. Hero Section — Purrheart headline + CTA */}
+      {/* ② Main hero — headline, stats, CTAs */}
       <HeroSection />
-
-      {/* 3. About Purrheart — Timeline 2005 → 2014 → Sekarang */}
-      
-      {/* 4. Latest Campaigns */}
+ 
+      {/* ④ Latest campaigns */}
       <CategorySection
-        title="Campaign Purrheart"
+        title="Campaign Aktif"
         donations={latest.map(formatCampaign)}
         linkHref="/donasi"
         linkText="Lihat Semua"
       />
 
-      {/* 5. Per-category sections */}
+      {/* ④ Per-category sections (max shown by categoriesWithCampaignsQuery) */}
       {categories.map((category: Category) => (
         <CategorySection
           key={category._id}
@@ -74,14 +72,12 @@ export default async function HomePage() {
         />
       ))}
 
-      {/* 6. How You Can Help */}
+      {/* ⑤ How to help — compact, links out to detail pages */}
       <HowToHelpSection />
 
-      {/* 7. Adoption */}
-      <AdoptionSection />
 
-      {/* 8. Orang Tua Asuh */}
-      <OtaSection />
+
+
 
       {/* 9. Mascot — Bakkien's Story */}
       <MascotSection />
@@ -90,8 +86,7 @@ export default async function HomePage() {
       <FaqSection />
 
       {/* 11. Contact */}
-      <ContactSection />
-
+       
     </div>
   );
 }

@@ -44,7 +44,7 @@ export function Navbar() {
                         : "bg-muted-foreground border-b-4 border-border dark:bg-background"
                 )}
             >
-                <div className="container mx-auto flex h-20 items-center justify-between px-4">
+                <div className="w-full flex h-20 items-center justify-between px-4 md:px-8">
                     {/* Logo */}
                     <Link href="/" className="flex items-center gap-3 group shrink-0">
                         <div className="relative flex items-center justify-center">
