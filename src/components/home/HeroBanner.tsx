@@ -52,7 +52,7 @@ export function HeroBanner({ banners = [] }: HeroBannerProps) {
 
     return (
         <section className="w-full pt-5 pb-3 md:pt-7 bg-background">
-            <div className="container mx-auto px-4 md:px-6">
+            <div className="container mx-auto  md:px-6">
                 <div
                     className="relative overflow-hidden rounded-2xl md:rounded-3xl shadow-2xl shadow-black/20 group"
                     ref={emblaRef}
@@ -67,7 +67,7 @@ export function HeroBanner({ banners = [] }: HeroBannerProps) {
 
                             return (
                                 <div key={banner._id} className="relative flex-none w-full min-w-0">
-                                    <Link href={banner.redirectUrl || "/donasi"} className="block relative w-full aspect-[21/9] md:aspect-[24/9]">
+                                    <Link href={banner.redirectUrl || "/donasi"} className="block relative w-full aspect-[4/5] md:aspect-[24/9]">
                                         <Image
                                             src={imageSrc}
                                             alt={banner.title || "Banner"}
