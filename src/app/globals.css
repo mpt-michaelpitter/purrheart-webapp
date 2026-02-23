@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
+
 :root {
   --background: #fff3e9;
   --foreground: #2b2b2b;
@@ -55,6 +59,7 @@
   --font-sans: var(--font-sans);
   --font-heading: var(--font-heading);
   --font-script: var(--font-script);
+  --font-passion: var(--font-passion);
 }
 
 .dark {

@@ -63,7 +63,7 @@ export function HowToHelpSection() {
                         <Heart className="h-3 w-3" />
                         CARA MEMBANTU
                     </div>
-                    <h2 className="text-3xl md:text-5xl font-black text-foreground mb-4">
+                    <h2 className="text-4xl md:text-6xl font-black text-foreground mb-4 font-passion uppercase tracking-tight">
                         Pilih Cara yang <span className="text-primary">Paling Sesuai.</span>
                     </h2>
                     <p className="text-muted-foreground max-w-md mx-auto text-sm md:text-base">
@@ -107,7 +107,7 @@ export function HowToHelpSection() {
 
                                     {/* Label Body */}
                                     <div className={`${way.color} py-6 px-6 text-center relative`}>
-                                        <span className="text-white text-xl font-black tracking-tight leading-none block drop-shadow-sm">
+                                        <span className="text-white text-2xl font-black tracking-tight leading-none block drop-shadow-sm font-passion uppercase">
                                             {way.title}
                                         </span>
                                         <div className="mt-3 flex items-center justify-center gap-1.5 text-white/90 text-xs font-black uppercase tracking-widest translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Poppins, Anton, Alex_Brush } from "next/font/google";
+import { Poppins, Anton, Alex_Brush, Passion_One } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -26,6 +26,12 @@ const alexBrush = Alex_Brush({
   weight: "400",
 });
 
+const passionOne = Passion_One({
+  subsets: ["latin"],
+  variable: "--font-passion",
+  weight: ["400", "700", "900"],
+});
+
 export const metadata: Metadata = {
   title: "purrhearth - Platform Donasi Terpercaya",
   description: "Bantu sesama, wujudkan harapan. Donation platform for a better future.",
@@ -37,7 +43,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id" className={`${poppins.variable} ${anton.variable} ${alexBrush.variable}`} suppressHydrationWarning>
+    <html lang="id" className={`${poppins.variable} ${anton.variable} ${alexBrush.variable} ${passionOne.variable}`} suppressHydrationWarning>
       <body className="font-sans transition-colors duration-300">
         <ThemeProvider
           attribute="class"
