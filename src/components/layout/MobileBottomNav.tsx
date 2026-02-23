@@ -9,7 +9,7 @@ const navItems = [
     { name: "Home", href: "/", icon: Home },
     { name: "Donasi", href: "/donasi", icon: Heart },
     { name: "Adopsi", href: "/adopsi", icon: Gift },
-    { name: "Explore", href: "/kategori", icon: LayoutGrid },
+    { name: "Explore", href: "/tentang", icon: LayoutGrid },
     { name: "Akun", href: "/akun", icon: User },
 ];
 

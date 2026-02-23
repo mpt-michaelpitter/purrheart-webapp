@@ -119,35 +119,47 @@ export function Navbar() {
             {/* ── Mobile Header ────────────────────────────────────────────── */}
             {!isDetailPage && (
                 <header className={cn(
-                    "sticky top-0 z-50 w-full md:hidden px-4 pb-3 pt-3 transition-all duration-300",
+                    "sticky top-0 z-50 w-full md:hidden transition-all duration-300",
                     scrolled
-                        ? "bg-background/90 backdrop-blur-xl shadow-sm border-b border-border"
-                        : "bg-background shadow-sm"
+                        ? "bg-background/95 backdrop-blur-xl shadow-md border-b border-border"
+                        : "bg-background border-b border-border/50"
                 )}>
-                    <div className="flex items-center gap-3">
-                        <div className="flex-1">
-                            <SearchBar
-                                placeholder="Ingin bantu siapa hari ini?"
-                                inputClassName="bg-muted/60 border-none"
-                            />
-                        </div>
+                    {/* Top Row: Logo & Utility */}
+                    <div className="flex items-center justify-between px-4 h-14">
+                        <Link href="/" className="flex items-center gap-2 group">
+                            <div className="relative flex items-center justify-center">
+                                <Heart className="h-6 w-6 fill-primary text-primary transition-transform group-hover:scale-110" />
+                                <Heart className="absolute h-2.5 w-2.5 fill-white text-white top-[28%]" />
+                            </div>
+                            <span className="text-xl font-black tracking-tighter text-foreground">
+                                purrheart
+                            </span>
+                        </Link>
 
-                        <div className="flex items-center gap-2 shrink-0">
-                            <Link href="/akun">
-                                <div className="h-10 w-10 bg-primary rounded-full flex items-center justify-center text-primary-foreground shadow-md shadow-primary/30">
-                                    <User className="h-5 w-5" />
-                                </div>
-                            </Link>
+                        <div className="flex items-center gap-2">
                             {mounted && (
                                 <button
                                     onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                                    className="h-10 w-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+                                    className="h-9 w-9 rounded-full bg-muted/60 flex items-center justify-center text-muted-foreground transition-colors active:scale-95"
                                     aria-label="Toggle theme"
                                 >
-                                    {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                                    {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
                                 </button>
                             )}
+                            <Link href="/akun">
+                                <div className="h-9 w-9 bg-primary/10 border border-primary/20 rounded-full flex items-center justify-center text-primary transition-transform active:scale-95">
+                                    <User className="h-4 w-4" strokeWidth={2.5} />
+                                </div>
+                            </Link>
                         </div>
+                    </div>
+
+                    {/* Bottom Row: Search */}
+                    <div className="px-4 pb-3 pt-1">
+                        <SearchBar
+                            placeholder="Cari donasi atau pahlawan..."
+                            inputClassName="bg-muted/50 border-none h-10 text-xs"
+                        />
                     </div>
                 </header>
             )}
