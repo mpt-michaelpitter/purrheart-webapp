@@ -52,7 +52,7 @@ export default async function HomePage() {
 
       {/* ② Main hero — headline, stats, CTAs */}
       <HeroSection />
- 
+
       {/* ④ Latest campaigns */}
       <CategorySection
         title="Campaign Aktif"
@@ -67,7 +67,7 @@ export default async function HomePage() {
           key={category._id}
           title={category.name}
           donations={category.campaigns.map(formatCampaign)}
-          linkHref={`/donasi?category=${category.slug}`}
+          linkHref={`/donasi/${category.slug}`}
           linkText={`Lihat ${category.name}`}
         />
       ))}
@@ -86,7 +86,7 @@ export default async function HomePage() {
       <FaqSection />
 
       {/* 11. Contact */}
-       
+
     </div>
   );
 }

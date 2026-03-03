@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { Heart, Instagram, Phone, ArrowRight, User, Calendar, Cat, ShieldCheck } from "lucide-react";
 import { fadeLeft, fadeRight, fadeUp, scalePop, cardStagger, hoverLift, tapPress, viewport } from "@/lib/animations";
 import { PawPattern } from "@/components/ui/paw-pattern";
@@ -91,9 +92,10 @@ export function AboutFounderSection() {
                                         className="relative h-20 w-20 shrink-0"
                                     >
                                         <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-[#562c72] to-purple-400 overflow-hidden shadow-lg border-2 border-white dark:border-zinc-800">
-                                            <img
+                                            <Image
                                                 src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&h=200&auto=format&fit=crop"
                                                 alt="Ci Mimi"
+                                                fill
                                                 className="w-full h-full object-cover"
                                             />
                                         </div>

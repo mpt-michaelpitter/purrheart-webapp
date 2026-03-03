@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Cat, Heart } from "lucide-react";
 import { motion } from "framer-motion";
 import { fadeUp, fadeLeft, fadeRight, scalePop, hoverLift, tapPress, viewport } from "@/lib/animations";
@@ -51,10 +52,11 @@ export function MascotSection() {
                                     transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }}
                                     className="relative mx-auto w-40 h-40 rounded-3xl overflow-hidden shadow-2xl border-4 border-white dark:border-zinc-800"
                                 >
-                                    <img
+                                    <Image
                                         src="https://images.unsplash.com/photo-1573865668131-974279df46b4?q=80&w=400&h=400&auto=format&fit=crop"
                                         alt="Bakkien Mascot"
-                                        className="w-full h-full object-cover"
+                                        fill
+                                        className="object-cover"
                                     />
                                 </motion.div>
                                 <div>

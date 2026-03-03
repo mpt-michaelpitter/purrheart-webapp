@@ -16,10 +16,26 @@ import type { SanityCampaign, Campaign, Category, Banner } from "@/types";
  * @returns Formatted Campaign with resolved image URL and computed daysLeft
  */
 export function formatCampaign(c: SanityCampaign): Campaign {
+    // Determine if we have a valid image source we can pass to urlFor
+    const hasImage = c.imageSrc && (
+        (typeof c.imageSrc === 'object' && c.imageSrc.asset) ||
+        typeof c.imageSrc === 'string'
+    );
+
+    const imageSrc = hasImage
+        ? (typeof c.imageSrc === 'string' ? c.imageSrc : urlFor(c.imageSrc).width(800).url())
+        : null;
+
+    if (imageSrc && !imageSrc.startsWith('http')) {
+        console.log(`[DEBUG] Broken Image detected for ${c.title}:`, { original: c.imageSrc, resolved: imageSrc });
+    } else {
+        console.log(`[DEBUG] Image for ${c.title}:`, imageSrc?.substring(0, 50) + "...");
+    }
+
     return {
         id: c._id,
         slug: c.slug,
-        imageSrc: c.imageSrc ? urlFor(c.imageSrc).width(800).url() : null,
+        imageSrc,
         title: c.title,
         organizer: c.organizer ?? "Purrheart",
         currentAmount: c.currentAmount ?? 0,

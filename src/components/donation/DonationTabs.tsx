@@ -1,9 +1,9 @@
 "use client";
 
-import { Heart, Users, Image as ImageIcon, Megaphone } from "lucide-react";
+import { Heart, Users, Megaphone } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export type TabType = "donasi" | "kabar" | "galeri" | "updates";
+export type TabType = "donasi" | "kabar" | "updates";
 
 interface DonationTabsProps {
     activeTab: TabType;
@@ -14,14 +14,13 @@ interface DonationTabsProps {
 const tabs = [
     { id: "donasi", label: "Kisah", icon: Heart },
     { id: "kabar", label: "Donatur", icon: Users },
-    { id: "galeri", label: "Galeri", icon: ImageIcon },
     { id: "updates", label: "Update", icon: Megaphone },
 ] as const;
 
 export function DonationTabs({ activeTab, onTabChange, updateCount = 0 }: DonationTabsProps) {
     return (
         <div className="sticky top-0 md:static z-30 bg-card shadow-sm md:shadow-none border-b md:border border-border md:rounded-2xl overflow-hidden">
-            <div className="grid grid-cols-4 divide-x divide-border">
+            <div className="grid grid-cols-3 divide-x divide-border">
                 {tabs.map((tab) => {
                     const Icon = tab.icon;
                     const isActive = activeTab === tab.id;

@@ -1,6 +1,7 @@
 "use client";
 
 import { PortableText } from "@portabletext/react";
+import Image from "next/image";
 import { CalendarDays, Megaphone } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -33,11 +34,12 @@ const ptComponents = {
     types: {
         image: ({ value }: any) => (
             <div className="my-4 rounded-2xl overflow-hidden border border-border">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                     src={value?.asset?.url ?? ""}
                     alt={value?.alt ?? ""}
-                    className="w-full object-cover"
+                    width={800}
+                    height={450}
+                    className="w-full h-auto object-cover"
                 />
                 {value?.alt && (
                     <p className="text-xs text-center text-muted-foreground py-2 bg-muted/30">{value.alt}</p>

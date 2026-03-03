@@ -19,14 +19,7 @@ export const campaignImage = defineType({
             },
             validation: (Rule) => Rule.required(),
         }),
-        defineField({
-            name: 'campaign',
-            title: 'Campaign (Ref)',
-            type: 'reference',
-            to: [{ type: 'campaign' }],
-            description: 'Campaign yang memiliki gambar ini',
-            validation: (Rule) => Rule.required(),
-        }),
+        
     ],
     preview: {
         select: {

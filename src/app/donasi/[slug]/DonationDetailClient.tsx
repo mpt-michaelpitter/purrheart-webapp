@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeft, Home } from "lucide-react";
 import { useState } from "react";
 import { DonationMobileHeader } from "@/components/donation/DonationMobileHeader";
@@ -85,33 +86,6 @@ export default function DonationDetailClient({ data }: { data: any }) {
                             )}
                             {activeTab === "kabar" && (
                                 <DonationList donors={data.donors || []} />
-                            )}
-                            {activeTab === "galeri" && (
-                                <div className="space-y-4 animate-in fade-in duration-300">
-                                    <h3 className="font-bold text-xl">Galeri</h3>
-                                    {images.length > 0 ? (
-                                        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                                            {images.map((img: any, i: number) => {
-                                                const src = img.fallbackSrc ?? img.image?.asset?.url;
-                                                if (!src) return null;
-                                                return (
-                                                    // eslint-disable-next-line @next/next/no-img-element
-                                                    <div key={i} className="aspect-square rounded-xl overflow-hidden border border-border bg-muted">
-                                                        <img
-                                                            src={src}
-                                                            alt={img.name ?? `Foto ${i + 1}`}
-                                                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                                                        />
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-                                    ) : (
-                                        <p className="text-sm text-muted-foreground text-center py-10">
-                                            Belum ada foto galeri.
-                                        </p>
-                                    )}
-                                </div>
                             )}
                             {activeTab === "updates" && (
                                 <CampaignUpdates updates={updates} />
