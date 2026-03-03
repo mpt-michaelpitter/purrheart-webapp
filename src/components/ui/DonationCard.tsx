@@ -26,11 +26,6 @@ export function DonationCard({
 
     const urgent = daysLeft > 0 && daysLeft <= 7;
 
-    // DEBUG: Log imageSrc to browser console
-    if (typeof window !== "undefined") {
-        console.log(`[DonationCard] ${title} imageSrc:`, imageSrc);
-    }
-
     return (
         <Link
             href={`/donasi/${slug}`}

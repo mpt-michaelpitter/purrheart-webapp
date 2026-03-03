@@ -69,7 +69,8 @@ export interface Banner {
     _id: string;
     title: string;
     imageUrl: any;            // Sanity image asset reference
-    redirectUrl: string;
+    redirectUrl?: string;     // Optional manual URL (for mock data)
+    categorySlug?: string;    // Automatic URL (from Sanity ref)
 }
 
 /** Saweria webhook payload */

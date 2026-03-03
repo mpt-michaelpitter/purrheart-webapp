@@ -26,12 +26,12 @@ export const banner = defineType({
             validation: (Rule) => Rule.required(),
         }),
         defineField({
-            name: 'redirectUrl',
-            title: 'URL Tujuan',
-            type: 'url',
-            description: 'Halaman yang dibuka saat banner diklik (gunakan path relatif, e.g. /donasi/vaccine)',
-            validation: (Rule) =>
-                Rule.uri({ allowRelative: true }),
+            name: 'category',
+            title: 'Kategori Tujuan',
+            type: 'reference',
+            to: [{ type: 'category' }],
+            description: 'Pilih kategori yang akan dibuka saat banner ini diklik',
+            validation: (Rule) => Rule.required(),
         }),
         defineField({
             name: 'isActive',
@@ -53,11 +53,12 @@ export const banner = defineType({
             title: 'title',
             media: 'imageUrl',
             isActive: 'isActive',
+            categorySlug: 'category->slug.current', // Select category slug
         },
-        prepare({ title, media, isActive }) {
+        prepare({ title, media, isActive, categorySlug }) {
             return {
                 title,
-                subtitle: isActive ? '✅ Aktif' : '⏸ Nonaktif',
+                subtitle: `${isActive ? '✅ Aktif' : '⏸ Nonaktif'} ${categorySlug ? `(${categorySlug})` : ''}`, // Include categorySlug in subtitle
                 media,
             };
         },

@@ -26,12 +26,6 @@ export function formatCampaign(c: SanityCampaign): Campaign {
         ? (typeof c.imageSrc === 'string' ? c.imageSrc : urlFor(c.imageSrc).width(800).url())
         : null;
 
-    if (imageSrc && !imageSrc.startsWith('http')) {
-        console.log(`[DEBUG] Broken Image detected for ${c.title}:`, { original: c.imageSrc, resolved: imageSrc });
-    } else {
-        console.log(`[DEBUG] Image for ${c.title}:`, imageSrc?.substring(0, 50) + "...");
-    }
-
     return {
         id: c._id,
         slug: c.slug,

@@ -58,17 +58,19 @@ export const campaignsByCategoryQuery = `
 export const categoryInfoQuery = `
     *[_type == "category" && slug.current == $slug][0] {
         "name": name,
-        "slug": slug.current
+        "slug": slug.current,
+        "description": description,
+        "image": banner->imageUrl
     }
 `;
 
 /** All banner slides */
 export const bannersQuery = `
-    *[_type == "banner"] {
+    *[_type == "banner" && isActive == true] {
         _id,
         title,
         imageUrl,
-        redirectUrl
+        "categorySlug": category->slug.current
     }
 `;
 

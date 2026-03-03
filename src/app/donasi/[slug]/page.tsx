@@ -10,6 +10,9 @@ import {
 import DonationDetailClient from "./DonationDetailClient";
 import { DonationCard } from "@/components/ui/DonationCard";
 import type { SanityCampaign } from "@/types";
+import Link from "next/link";
+import Image from "next/image";
+import { ArrowLeft } from "lucide-react";
 
 // ── Data Fetching ─────────────────────────────────────────────────────────────
 
@@ -38,21 +41,53 @@ export default async function DonationDetailPage({
     const categoryData = await getCategoryData(slug);
 
     if (categoryData) {
+        const categoryImageUrl = categoryData.info.image
+            ? urlFor(categoryData.info.image).width(1920).height(600).url()
+            : null;
+
         return (
             <div className="flex flex-col min-h-screen pb-20">
-                {/* ── Category Header ── */}
-                <div className="pt-24 pb-10 bg-muted/30 border-b border-border">
-                    <div className="container mx-auto px-4 md:px-6">
-                        <p className="text-sm text-primary font-semibold mb-1">Kategori</p>
-                        <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-3">
-                            {categoryData.info.name}
-                        </h1>
-                        <a
-                            href="/donasi"
-                            className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                        >
-                            ← Lihat semua kategori
-                        </a>
+                {/* ── Rich Category Header ── */}
+                <div className="relative h-[40vh] md:h-[50vh] min-h-[350px] w-full flex items-center overflow-hidden">
+                    {/* Background Image */}
+                    {categoryImageUrl ? (
+                        <Image
+                            src={categoryImageUrl}
+                            alt={categoryData.info.name}
+                            fill
+                            priority
+                            className="object-cover"
+                        />
+                    ) : (
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-purple-600/20" />
+                    )}
+
+                    {/* Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+                    <div className="absolute inset-0 bg-black/20" />
+
+                    {/* Content */}
+                    <div className="container mx-auto px-4 md:px-8 relative z-10 pt-16">
+                        <div className="max-w-3xl space-y-4">
+                            <Link
+                                href="/donasi"
+                                className="inline-flex items-center text-sm font-semibold text-primary-foreground/90 hover:text-white transition-colors bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-full"
+                            >
+                                <ArrowLeft className="mr-2 h-4 w-4" />
+                                Semua Kategori
+                            </Link>
+
+                            <div className="space-y-2">
+                                <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight drop-shadow-sm">
+                                    {categoryData.info.name}
+                                </h1>
+                                {categoryData.info.description && (
+                                    <p className="text-lg md:text-xl text-white/90 font-medium max-w-2xl leading-relaxed drop-shadow-sm">
+                                        {categoryData.info.description}
+                                    </p>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </div>
 

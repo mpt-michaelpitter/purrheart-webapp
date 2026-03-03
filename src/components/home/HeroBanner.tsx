@@ -65,9 +65,13 @@ export function HeroBanner({ banners = [] }: HeroBannerProps) {
                                 ? urlFor(banner.imageUrl).width(1400).url()
                                 : (banner.imageSrc || "/images/banner/1.webp");
 
+                            const bannerLink = banner.categorySlug
+                                ? `/donasi/${banner.categorySlug}`
+                                : (banner.redirectUrl || "/donasi");
+
                             return (
                                 <div key={banner._id} className="relative flex-none w-full min-w-0">
-                                    <Link href={banner.redirectUrl || "/donasi"} className="block relative w-full aspect-[4/5] md:aspect-[24/9]">
+                                    <Link href={bannerLink} className="block relative w-full aspect-[4/5] md:aspect-[24/9]">
                                         <Image
                                             src={imageSrc}
                                             alt={banner.title || "Banner"}

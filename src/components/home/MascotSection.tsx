@@ -53,7 +53,7 @@ export function MascotSection() {
                                     className="relative mx-auto w-40 h-40 rounded-3xl overflow-hidden shadow-2xl border-4 border-white dark:border-zinc-800"
                                 >
                                     <Image
-                                        src="https://images.unsplash.com/photo-1573865668131-974279df46b4?q=80&w=400&h=400&auto=format&fit=crop"
+                                        src="https://images.unsplash.com/photo-1529778873920-4da4926a72c2?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                                         alt="Bakkien Mascot"
                                         fill
                                         className="object-cover"
