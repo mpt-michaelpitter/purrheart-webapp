@@ -53,12 +53,12 @@ export const banner = defineType({
             title: 'title',
             media: 'imageUrl',
             isActive: 'isActive',
-            categorySlug: 'category->slug.current', // Select category slug
+            categoryName: 'category.name',
         },
-        prepare({ title, media, isActive, categorySlug }) {
+        prepare({ title, media, isActive, categoryName }) {
             return {
-                title,
-                subtitle: `${isActive ? '✅ Aktif' : '⏸ Nonaktif'} ${categorySlug ? `(${categorySlug})` : ''}`, // Include categorySlug in subtitle
+                title: title || 'Untitled Banner',
+                subtitle: `${isActive ? '✅ Aktif' : '⏸ Nonaktif'} ${categoryName ? `(${categoryName})` : ''}`,
                 media,
             };
         },

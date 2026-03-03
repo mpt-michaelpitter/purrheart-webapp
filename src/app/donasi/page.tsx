@@ -45,7 +45,7 @@ export default async function DonasiPage() {
                             title={cat.name}
                             donations={cat.campaigns.map(formatCampaign)}
                             linkHref={`/donasi/${cat.slug}`}
-                            linkText={`Lihat Semua ${cat.name}`}
+                            linkText="Lihat Semua"
                         />
                     ))
                 ) : (

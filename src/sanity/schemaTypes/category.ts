@@ -35,14 +35,12 @@ export const category = defineType({
     preview: {
         select: {
             title: 'name',
-            media: 'banner.imageUrl',
-            bannerTitle: 'banner.title',
+            description: 'description',
         },
-        prepare({ title, media, bannerTitle }) {
+        prepare({ title, description }) {
             return {
                 title: title || 'Unnamed Category',
-                subtitle: bannerTitle ? `Banner: ${bannerTitle}` : 'Belum ada banner',
-                media,
+                subtitle: description || 'No description',
             }
         },
     },

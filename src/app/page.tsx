@@ -68,7 +68,7 @@ export default async function HomePage() {
           title={category.name}
           donations={category.campaigns.map(formatCampaign)}
           linkHref={`/donasi/${category.slug}`}
-          linkText={`Lihat ${category.name}`}
+          linkText="Lihat Semua"
         />
       ))}
 
