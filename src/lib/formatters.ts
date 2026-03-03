@@ -51,7 +51,7 @@ export function categoryToBannerSlide(category: Category): Banner {
         _id: `cat-${category._id}`,
         title: category.name,
         imageUrl: category.image,
-        redirectUrl: `/donasi?category=${category.slug}`,
+        categorySlug: category.slug,
     };
 }
 
