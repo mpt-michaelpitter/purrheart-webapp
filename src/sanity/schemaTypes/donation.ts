@@ -71,6 +71,13 @@ export const donation = defineType({
             readOnly: true,
         }),
         defineField({
+            name: 'createdAt',
+            title: 'Tanggal Donasi',
+            type: 'datetime',
+            readOnly: true,
+            initialValue: () => new Date().toISOString(),
+        }),
+        defineField({
             name: 'isAnonymous',
             title: 'Anonim',
             type: 'boolean',

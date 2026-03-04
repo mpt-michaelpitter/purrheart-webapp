@@ -25,7 +25,7 @@ export default function DonationDetailClient({ data }: { data: any }) {
             : [];
 
     return (
-        <div className="min-h-screen md:px-20 pb-24 md:pb-12 relative animate-in fade-in duration-500">
+        <div className="min-h-screen md:px-20 pb-0 md:pb-12 relative animate-in fade-in duration-500">
 
             {/* Mobile floating back / home buttons */}
             <div className="md:hidden fixed top-0 left-0 right-0 z-40 p-4 flex items-center justify-between pointer-events-none">
@@ -68,6 +68,8 @@ export default function DonationDetailClient({ data }: { data: any }) {
                             organizer={data.organizer}
                             verified={data.verified}
                             currentAmount={data.currentAmount}
+                            targetAmount={data.targetAmount ?? 0}
+                            donorCount={data.donorCount ?? 0}
                             daysLeft={data.daysLeft}
                             percentage={percentage}
                         />

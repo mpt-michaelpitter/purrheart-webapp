@@ -112,8 +112,6 @@ export default async function DonationDetailPage({
     // 2. Try fetching as campaign
     const campaign = await getCampaignDetail(slug);
 
-    console.log(`[slug-page] slug="${slug}", categoryData=${!!categoryData}, campaign=${!!campaign}`);
-
     if (!campaign) return notFound();
 
     const imageSrc = campaign.imageSrc
