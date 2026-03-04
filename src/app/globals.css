@@ -4,31 +4,32 @@ html {
   scroll-behavior: smooth;
 }
 
+/* ─── Light Theme ──────────────────────────────────────────────────────────── */
 :root {
-  --background: #fff3e9;
-  --foreground: #2b2b2b;
+  --background: #f8f9fa;
+  --foreground: #1a1a2e;
 
-  --primary: #562c72;
+  --primary: #7c3aed;
   --primary-foreground: #ffffff;
 
-  --secondary: #015651;
+  --secondary: #0d7377;
   --secondary-foreground: #ffffff;
 
   --card: #ffffff;
-  --card-foreground: #2b2b2b;
+  --card-foreground: #1a1a2e;
 
-  --muted: #fdf5f0;
-  --muted-foreground: #562c72;
+  --muted: #f1f3f5;
+  --muted-foreground: #64748b;
 
-  --accent: #fdc65c;
-  --accent-foreground: #2b2b2b;
+  --accent: #f3f0ff;
+  --accent-foreground: #1a1a2e;
 
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
 
-  --border: #562c72;
-  --input: #562c72;
-  --ring: #562c72;
+  --border: #e2e8f0;
+  --input: #cbd5e1;
+  --ring: #7c3aed;
 
   --radius: 1rem;
 }
@@ -62,11 +63,12 @@ html {
   --font-passion: var(--font-passion);
 }
 
+/* ─── Dark Theme ───────────────────────────────────────────────────────────── */
 .dark {
   --background: #020617;
   --foreground: #f8fafc;
 
-  --primary: #6037dd;
+  --primary: #8b5cf6;
   --primary-foreground: #ffffff;
 
   --secondary: #000000ff;
@@ -76,7 +78,7 @@ html {
   --card-foreground: #f8fafc;
 
   --muted: #1e293b;
-  --muted-foreground: #f8fafc;
+  --muted-foreground: #94a3b8;
 
   --accent: #1e293b;
   --accent-foreground: #f8fafc;
@@ -86,9 +88,10 @@ html {
 
   --border: #1e293b;
   --input: #1e293b;
-  --ring: #6c46dd;
+  --ring: #8b5cf6;
 }
 
+/* ─── Global Styles ────────────────────────────────────────────────────────── */
 body {
   background: var(--background);
   color: var(--foreground);
@@ -96,16 +99,26 @@ body {
   @apply antialiased transition-colors duration-300;
 }
 
+/* Text selection in brand color */
+::selection {
+  background-color: var(--primary);
+  color: white;
+}
+
+/* Smooth focus-visible ring for accessibility */
+*:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 @layer utilities {
   .scrollbar-hide {
     -ms-overflow-style: none;
-    /* IE and Edge */
     scrollbar-width: none;
-    /* Firefox */
   }
 
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
-    /* Chrome, Safari and Opera */
   }
 }

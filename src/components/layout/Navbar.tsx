@@ -41,7 +41,7 @@ export function Navbar() {
                     "sticky top-0 z-50 w-full hidden md:block transition-all duration-300",
                     scrolled
                         ? "bg-background/80 backdrop-blur-xl border-b border-border shadow-sm"
-                        : "bg-muted-foreground border-b-4 border-border dark:bg-background"
+                        : "bg-primary border-b border-primary/80 dark:bg-background dark:border-border"
                 )}
             >
                 <div className="w-full flex h-20 items-center justify-between px-4 md:px-8">
@@ -54,13 +54,13 @@ export function Navbar() {
                         <div className="flex flex-col justify-center">
                             <span className={cn(
                                 "text-2xl font-extrabold tracking-tight leading-none transition-colors",
-                                scrolled ? "text-foreground" : "text-background dark:text-foreground"
+                                scrolled ? "text-foreground" : "text-primary-foreground dark:text-foreground"
                             )}>
                                 purrheart
                             </span>
                             <div className={cn(
                                 "flex items-center gap-1 mt-0.5 transition-colors",
-                                scrolled ? "text-muted-foreground" : "text-muted dark:text-foreground"
+                                scrolled ? "text-muted-foreground" : "text-primary-foreground/60 dark:text-foreground/60"
                             )}>
                                 <span className="text-[10px] font-medium">Previously</span>
                                 <Heart className="h-2 w-2 fill-current" />
@@ -85,10 +85,10 @@ export function Navbar() {
                                     className={cn(
                                         "px-3 py-2 text-sm font-semibold rounded-lg transition-colors",
                                         isActive
-                                            ? "bg-primary/10 text-primary"
+                                            ? (scrolled ? "bg-primary/10 text-primary" : "bg-white/20 text-white font-bold")
                                             : scrolled
-                                                ? "text-foreground hover:bg-muted"
-                                                : "text-muted hover:text-foreground hover:bg-muted dark:text-foreground"
+                                                ? "text-foreground/70 hover:text-foreground hover:bg-muted dark:text-foreground"
+                                                : "text-primary-foreground/80 hover:text-primary-foreground hover:bg-white/10 dark:text-foreground"
                                     )}
                                 >
                                     {link.name}
@@ -100,7 +100,7 @@ export function Navbar() {
                             {mounted && (
                                 <button
                                     onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                                    className="p-2 rounded-full hover:bg-muted/60 transition-colors text-muted-foreground hover:text-foreground"
+                                    className="p-2 rounded-full hover:bg-muted/60 transition-colors text-muted-foreground hover:text-foreground dark:text-foreground"
                                     aria-label="Toggle theme"
                                 >
                                     {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}

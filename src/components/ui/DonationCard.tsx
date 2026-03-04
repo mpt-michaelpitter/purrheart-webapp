@@ -32,12 +32,12 @@ export function DonationCard({
             className={cn(
                 // Base
                 "group relative flex flex-col overflow-hidden rounded-2xl bg-card",
-                // Border with gradient on hover
-                "border border-border hover:border-primary/40",
-                // Shadow
-                "shadow-sm hover:shadow-xl hover:shadow-primary/10",
+                // Border — subtle in light mode
+                "border border-border/60 hover:border-primary/30",
+                // Shadow — soft elevation
+                "shadow-sm shadow-black/[0.04] hover:shadow-lg hover:shadow-primary/8",
                 // Motion
-                "transition-all duration-300 hover:-translate-y-1.5",
+                "transition-all duration-300 hover:-translate-y-1",
                 className
             )}
         >
