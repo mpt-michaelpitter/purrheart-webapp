@@ -12,6 +12,7 @@ import { client } from "@/sanity/lib/client";
 import { formatCampaign, categoryToBannerSlide } from "@/lib/formatters";
 import {
   latestCampaignsQuery,
+  endingSoonCampaignsQuery,
   categoriesWithCampaignsQuery,
   bannersQuery,
 } from "@/lib/queries";
@@ -20,8 +21,9 @@ import type { Category, Banner } from "@/types";
 // ── Data Fetching ─────────────────────────────────────────────────────────────
 
 async function getHomeData() {
-  const [latest, categories, banners] = await Promise.all([
+  const [latest, endingSoon, categories, banners] = await Promise.all([
     client.fetch(latestCampaignsQuery(6), {}, { cache: "no-store" }),
+    client.fetch(endingSoonCampaignsQuery(6), {}, { cache: "no-store" }),
     client.fetch(categoriesWithCampaignsQuery(6), {}, { cache: "no-store" }),
     client.fetch(bannersQuery, {}, { cache: "no-store" }),
   ]);
@@ -32,6 +34,7 @@ async function getHomeData() {
 
   return {
     latest,
+    endingSoon,
     categories: (categories as Category[]).filter(
       (c) => c.campaigns?.length > 0
     ),
@@ -42,7 +45,7 @@ async function getHomeData() {
 // ── Page Component ────────────────────────────────────────────────────────────
 
 export default async function HomePage() {
-  const { latest, categories, banners } = await getHomeData();
+  const { latest, endingSoon, categories, banners } = await getHomeData();
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -52,6 +55,16 @@ export default async function HomePage() {
 
       {/* ② Main hero — headline, stats, CTAs */}
       <HeroSection />
+
+      {/* ③ Ending Soon — campaigns with approaching deadlines */}
+      {endingSoon.length > 0 && (
+        <CategorySection
+          title="🔥 Segera Berakhir"
+          donations={endingSoon.map(formatCampaign)}
+          linkHref="/donasi"
+          linkText="Lihat Semua"
+        />
+      )}
 
       {/* ④ Latest campaigns */}
       <CategorySection

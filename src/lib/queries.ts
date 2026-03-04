@@ -35,6 +35,12 @@ export const latestCampaignsQuery = (limit = 4) =>
         ${CAMPAIGN_CARD_FIELDS}
     }`;
 
+/** Campaigns with deadlines approaching (within 30 days), soonest first */
+export const endingSoonCampaignsQuery = (limit = 6) =>
+    `*[_type == "campaign" && deadline != null && deadline > now() && dateTime(deadline) < dateTime(now()) + 60*60*24*30] | order(deadline asc)[0..${limit - 1}] {
+        ${CAMPAIGN_CARD_FIELDS}
+    }`;
+
 /** All categories with their top N campaigns + banner image */
 export const categoriesWithCampaignsQuery = (campaignsPerCategory = 8) =>
     `*[_type == "category"] | order(_createdAt asc) {
