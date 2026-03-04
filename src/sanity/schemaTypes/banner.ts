@@ -12,7 +12,7 @@ export const banner = defineType({
     fields: [
         defineField({
             name: 'title',
-            title: 'Judul Banner',
+            title: 'Title',
             type: 'string',
             description: 'Dipakai sebagai label aksesibel dan alt text',
             validation: (Rule) => Rule.required(),
@@ -53,12 +53,11 @@ export const banner = defineType({
             title: 'title',
             media: 'imageUrl',
             isActive: 'isActive',
-            categoryName: 'category.name',
         },
-        prepare({ title, media, isActive, categoryName }) {
+        prepare({ title, media, isActive }) {
             return {
                 title: title || 'Untitled Banner',
-                subtitle: `${isActive ? '✅ Aktif' : '⏸ Nonaktif'} ${categoryName ? `(${categoryName})` : ''}`,
+                subtitle: isActive ? '✅ Aktif' : '⏸ Nonaktif',
                 media,
             };
         },

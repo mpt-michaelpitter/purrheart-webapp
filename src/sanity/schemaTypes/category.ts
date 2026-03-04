@@ -35,13 +35,7 @@ export const category = defineType({
     preview: {
         select: {
             title: 'name',
-            description: 'description',
-        },
-        prepare({ title, description }) {
-            return {
-                title: title || 'Unnamed Category',
-                subtitle: description || 'No description',
-            }
+            subtitle: 'slug.current',
         },
     },
 })
