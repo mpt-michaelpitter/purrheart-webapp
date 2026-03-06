@@ -142,15 +142,8 @@ export default function PaymentPageClient({ data }: PaymentPageClientProps) {
             </div>
             <h2 className="text-xl font-bold text-foreground mb-2">Menunggu Pembayaran...</h2>
             <p className="text-sm text-muted-foreground max-w-xs leading-relaxed">
-                Selesaikan pembayaran di jendela Saweria. Pastikan Anda menyertakan pesan:
+                Selesaikan pembayaran di jendela Saweria. Halaman ini akan otomatis mendeteksi pembayaran setelah konfirmasi.
             </p>
-            <div className="mt-4 bg-yellow-50 dark:bg-yellow-950/30 border border-yellow-200 dark:border-yellow-900/50 rounded-xl px-5 py-3 font-mono font-bold text-yellow-900 dark:text-yellow-300 text-sm">
-                {composedMessage}
-            </div>
-            <p className="text-xs text-muted-foreground mt-4 max-w-xs">
-                Halaman ini akan otomatis mendeteksi pembayaran setelah konfirmasi dari Saweria.
-            </p>
-
             <div className="flex flex-col gap-3 mt-8 w-full max-w-sm">
                 <button
                     onClick={openSaweria}

@@ -19,50 +19,45 @@ export function LiveDonationToast() {
     const isInitialFetch = useRef(true);
 
     useEffect(() => {
-        console.log("[LiveDonation] System started polling for notifications...");
-
         const fetchLatestDonations = async () => {
+            // Only poll if the tab is active to save resources/API hits
+            if (document.visibilityState !== 'visible') return;
+
             try {
                 const res = await fetch("/api/donations/latest");
-                if (!res.ok) {
-                    console.error("[LiveDonation] API error:", res.status);
-                    return;
-                }
+                if (!res.ok) return;
 
                 const data = await res.json();
                 if (data.success && data.data) {
                     const latest = data.data;
-                    console.log(`[LiveDonation] API check: ${latest.length} donations found.`);
 
-                    // First run: just mark existing ones as seen so we don't spam 
-                    // a visitor with historic notifications.
                     if (isInitialFetch.current) {
-                        console.log("[LiveDonation] Initial setup: IDs marked as seen.");
                         latest.forEach((d: Donation) => seenIds.current.add(d._id));
                         isInitialFetch.current = false;
                         return;
                     }
 
-                    // Check for new donations
                     const newDonations = latest.filter((d: Donation) => !seenIds.current.has(d._id));
-
                     if (newDonations.length > 0) {
-                        console.log(`[LiveDonation] Found ${newDonations.length} NEW donations! Showing them now.`);
                         newDonations.forEach((d: Donation) => seenIds.current.add(d._id));
-
-                        // Add to queue
                         setDonations(prev => [...prev, ...newDonations]);
                     }
                 }
             } catch (error) {
-                console.error("[LiveDonation] Polling failed:", error);
+                // Silently handle polling errors, the next interval will retry
             }
         };
 
         fetchLatestDonations();
-        const interval = setInterval(fetchLatestDonations, 10000); // 10s for better responsiveness
+        const interval = setInterval(fetchLatestDonations, 45000); // 45s interval is safer for rate limits
 
-        return () => clearInterval(interval);
+        // Also fetch when user returns to the tab
+        document.addEventListener('visibilitychange', fetchLatestDonations);
+
+        return () => {
+            clearInterval(interval);
+            document.removeEventListener('visibilitychange', fetchLatestDonations);
+        };
     }, []);
 
     // Effect to handle showing toasts one by one
@@ -84,16 +79,10 @@ export function LiveDonationToast() {
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: -60, opacity: 0 }}
                     transition={{ type: "spring", stiffness: 120, damping: 20 }}
-                    className="fixed top-20 md:top-20 left-0 right-0 z-[40] w-full pointer-events-none"
+                    className="fixed top-14 md:top-20 left-0 right-0 z-[100] w-full pointer-events-none"
                 >
-                    {/* Mobile adjustment: Navbar (56px) + Search (approx 48px) = 104px */}
-                    <style jsx global>{`
-                        @media (max-width: 768px) {
-                            .fixed.top-20 { top: 104px !important; }
-                        }
-                    `}</style>
                     {/* Premium Marquee Bar */}
-                    <div className="h-10 md:h-12 bg-slate-950/90 backdrop-blur-md border-b border-white/10 flex items-center shadow-2xl overflow-hidden">
+                    <div className="h-10 md:h-12 bg-slate-950/95 md:bg-slate-950/90 backdrop-blur-md border-b border-white/10 flex items-center shadow-2xl overflow-hidden ring-1 ring-white/5">
 
                         {/* Static Label Label */}
                         <div className="absolute left-0 top-0 bottom-0 z-20 bg-gradient-to-r from-pink-600 to-purple-700 px-3 md:px-5 flex items-center gap-2 shadow-[8px_0_15px_rgba(0,0,0,0.4)]">
@@ -105,29 +94,26 @@ export function LiveDonationToast() {
                         </div>
 
                         {/* Scrolling Content (Marquee) */}
-                        <motion.div
-                            initial={{ x: "-100%" }}
-                            animate={{ x: "110vw" }}
-                            transition={{
-                                duration: 15,
-                                ease: "linear",
-                                repeat: 0
-                            }}
-                            onAnimationComplete={() => setCurrentToast(null)}
-                            className="flex items-center gap-6 whitespace-nowrap pl-[140px] md:pl-[180px]"
-                        >
-                            <div className="flex items-center gap-3">
-                                <Heart className="w-4 h-4 md:w-5 md:h-5 text-pink-400 fill-pink-400" />
-                                <span className="text-xs md:text-sm font-medium text-white/90">
-                                    <span className="font-bold text-pink-400">{currentToast.donorName}</span> baru saja berdonasi {" "}
-                                    <span className="font-bold text-emerald-400 italic">Rp {currentToast.amount.toLocaleString("id-ID")}</span> {" "}
-                                    untuk <span className="underline decoration-purple-400/50 underline-offset-4">{currentToast.campaignTitle}</span>.
-                                </span>
-                                <span className="text-[10px] md:text-xs font-bold text-emerald-400 ml-4 py-1 px-3 bg-emerald-500/10 rounded-full border border-emerald-500/20 italic">
-                                    "Terimakasih atas donasinya! ❤️"
-                                </span>
+                        <div className="flex-1 overflow-hidden pointer-events-auto">
+                            <div
+                                className="flex items-center gap-6 whitespace-nowrap animate-marquee hover:[animation-play-state:paused] cursor-help w-max"
+                                onAnimationEnd={() => setCurrentToast(null)}
+                            >
+                                <div className="flex items-center gap-3 pl-[140px] md:pl-[180px]">
+                                    <Heart className="w-4 h-4 md:w-5 md:h-5 text-pink-400 fill-pink-400" />
+                                    <span className="text-xs md:text-sm font-medium text-white/90">
+                                        <span className="font-bold text-pink-400">
+                                            {currentToast.donorName?.trim() && currentToast.donorName !== "Anonymous"
+                                                ? currentToast.donorName
+                                                : "Orang Dermawan"}
+                                        </span> baru saja berdonasi {" "}
+                                        <span className="font-bold text-emerald-400 italic">Rp {currentToast.amount.toLocaleString("id-ID")}</span> {" "}
+                                        untuk <span className="underline decoration-purple-400/50 underline-offset-4">{currentToast.campaignTitle}</span>.
+                                    </span>
+                                </div>
+                                {/* Duplicate for continuous feel if needed, but here we just want 1 pass */}
                             </div>
-                        </motion.div>
+                        </div>
 
                         {/* Right side fade for smoothness */}
                         <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-slate-950 via-slate-950/40 to-transparent z-10 pointer-events-none" />
