@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { LiveDonationToast } from "@/components/donation/LiveDonationToast";
 
 interface MainLayoutWrapperProps {
     children: React.ReactNode;
@@ -36,6 +37,7 @@ export function MainLayoutWrapper({
                 </main>
                 {!isPaymentPage && footer}
                 {pendingBar}
+                <LiveDonationToast />
                 {isMainPage && mobileNav}
             </div>
         </>

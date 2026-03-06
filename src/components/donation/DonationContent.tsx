@@ -21,16 +21,28 @@ import { urlFor } from '@/sanity/lib/image';
 const myPortableTextComponents = {
     types: {
         image: ({ value }: any) => {
-            return (
-                <div className="relative w-full h-64 my-4 rounded-lg overflow-hidden">
-                    <Image
-                        src={urlFor(value).url()}
-                        alt={value.alt || 'Campaign Image'}
-                        fill
-                        className="object-cover"
-                    />
-                </div>
-            );
+            // Check if value has a valid image asset reference
+            if (!value?.asset?._ref && !value?._ref) {
+                console.warn("Invalid image object passed to PortableText", value);
+                return null;
+            }
+
+            try {
+                return (
+                    <div className="relative w-full h-64 md:h-96 my-6 rounded-xl overflow-hidden shadow-sm border border-border">
+                        <Image
+                            src={urlFor(value).url()}
+                            alt={value.alt || 'Story Image'}
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 768px) 100vw, 800px"
+                        />
+                    </div>
+                );
+            } catch (e) {
+                console.error("Failed to render PortableText image", e);
+                return null;
+            }
         },
         youtube: ({ value }: any) => {
             const { url } = value;

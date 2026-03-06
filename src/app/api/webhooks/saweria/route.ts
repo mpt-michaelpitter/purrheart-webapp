@@ -97,27 +97,28 @@ export async function POST(req: NextRequest) {
             console.log(`[Saweria] ✅ Created new success donation: ${donationId} (${campaignSlug || 'no campaign'}, Rp ${amount_raw})`);
         }
 
-        // ── 5. Create Ledger Entry (campaignBalance) ──
+        // ── 5. Create Ledger Entry & Atomic Increment ──
         if (campaignId && amount_raw > 0) {
-            // Get previous balance
-            const previousBalance = await client.fetch<number>(
-                `coalesce(*[_type == "campaignBalance" && campaign._ref == $campaignId] | order(createdAt desc)[0].balance, 0)`,
+            // Atomic update to campaign's currentBalance using inc
+            await writeClient.patch(campaignId).inc({ currentBalance: amount_raw }).commit();
+
+            // Create new ledger entry without needing to read the previous balance
+            // We just record the amount added. The actual campaign doc holds the true aggregated value safely.
+            const campaignData = await client.fetch<{ currentBalance: number }>(
+                `*[_type == "campaign" && _id == $campaignId][0]{ currentBalance }`,
                 { campaignId }
             );
 
-            const newBalance = previousBalance + amount_raw;
-
-            // Create new balance entry
             await writeClient.create({
                 _type: 'campaignBalance',
                 campaign: { _type: 'reference', _ref: campaignId },
                 amount: amount_raw,
-                balance: newBalance,
+                balance: campaignData?.currentBalance || amount_raw, // This is just a snapshot for the ledger UI
                 donation: { _type: 'reference', _ref: donationId },
                 createdAt: new Date().toISOString(),
             });
 
-            console.log(`[Saweria] 💰 Ledger updated: Rp ${previousBalance} + Rp ${amount_raw} = Rp ${newBalance}`);
+            console.log(`[Saweria] 💰 Atomic Increment: +Rp ${amount_raw} applied to campaign ${campaignId}`);
         }
 
         return NextResponse.json({ success: true, donationId });

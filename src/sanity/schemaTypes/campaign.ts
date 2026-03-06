@@ -58,6 +58,14 @@ export const campaign = defineType({
             validation: (Rule) => Rule.required().min(10000),
         }),
         defineField({
+            name: 'currentBalance',
+            title: 'Current Balance (Ledger)',
+            type: 'number',
+            description: 'Atomic running balance. Do not edit manually.',
+            readOnly: true,
+            initialValue: 0,
+        }),
+        defineField({
             name: 'deadline',
             title: 'Batas Waktu',
             type: 'datetime',
