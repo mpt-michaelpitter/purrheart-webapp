@@ -28,15 +28,11 @@ export async function POST(req: NextRequest) {
         }
 
         // ── 1. Determine campaign slug ──
-        // Priority: ?campaign= query param → fallback: #hashtag from message
-        let campaignSlug = req.nextUrl.searchParams.get('campaign');
+        // Only trust ?campaign= query param for multi-wallet strategy
+        const campaignSlug = req.nextUrl.searchParams.get('campaign');
 
         if (!campaignSlug) {
-            const slugMatch = (message || '').match(/#([\w-]+)/g);
-            if (slugMatch?.length) {
-                campaignSlug = slugMatch[slugMatch.length - 1].replace('#', '');
-                console.log(`[Saweria] Campaign slug from hashtag: #${campaignSlug}`);
-            }
+            console.warn(`[Saweria] Missing ?campaign= query param in webhook URL. Donation ${id} will be unlinked.`);
         } else {
             console.log(`[Saweria] Campaign slug from query param: ${campaignSlug}`);
         }
@@ -54,7 +50,6 @@ export async function POST(req: NextRequest) {
         }
 
         // ── 3. Find the most recent PENDING donation for this campaign ──
-        //    Created in the last 60 minutes (generous window for slow payers)
         let donationId: string | null = null;
 
         if (campaignId) {
@@ -100,6 +95,29 @@ export async function POST(req: NextRequest) {
 
             donationId = donation._id;
             console.log(`[Saweria] ✅ Created new success donation: ${donationId} (${campaignSlug || 'no campaign'}, Rp ${amount_raw})`);
+        }
+
+        // ── 5. Create Ledger Entry (campaignBalance) ──
+        if (campaignId && amount_raw > 0) {
+            // Get previous balance
+            const previousBalance = await client.fetch<number>(
+                `coalesce(*[_type == "campaignBalance" && campaign._ref == $campaignId] | order(createdAt desc)[0].balance, 0)`,
+                { campaignId }
+            );
+
+            const newBalance = previousBalance + amount_raw;
+
+            // Create new balance entry
+            await writeClient.create({
+                _type: 'campaignBalance',
+                campaign: { _type: 'reference', _ref: campaignId },
+                amount: amount_raw,
+                balance: newBalance,
+                donation: { _type: 'reference', _ref: donationId },
+                createdAt: new Date().toISOString(),
+            });
+
+            console.log(`[Saweria] 💰 Ledger updated: Rp ${previousBalance} + Rp ${amount_raw} = Rp ${newBalance}`);
         }
 
         return NextResponse.json({ success: true, donationId });

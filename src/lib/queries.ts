@@ -16,7 +16,7 @@ export const CAMPAIGN_CARD_FIELDS = `
     "imageSrc": mainImage,
     organizer,
     "currentAmount": coalesce(
-        math::sum(*[_type == "donation" && references(^._id) && status == "success"].amount),
+        *[_type == "campaignBalance" && campaign._ref == ^._id] | order(createdAt desc)[0].balance,
         0
     ),
     "donorCount": count(
@@ -93,7 +93,7 @@ export const campaignDetailQuery = `
         },
         organizer,
         "currentAmount": coalesce(
-            math::sum(*[_type == "donation" && campaign._ref == ^._id && status == "success"].amount),
+            *[_type == "campaignBalance" && campaign._ref == ^._id] | order(createdAt desc)[0].balance,
             0
         ),
         targetAmount,

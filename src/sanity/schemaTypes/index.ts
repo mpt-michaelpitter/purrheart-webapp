@@ -3,6 +3,7 @@ import { campaign } from './campaign'
 import { category } from './category'
 import { donation } from './donation'
 import { donationLog } from './donationLog'
+import { campaignBalance } from './campaignBalance'
 import { banner } from './banner'
 import { company } from './company'
 import { user } from './user'
@@ -25,6 +26,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
         // ── Donations ─────────────────────────────
         donation,
         donationLog,
+        campaignBalance,
 
         // ── Supporting ────────────────────────────
         update,
