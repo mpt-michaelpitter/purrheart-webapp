@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Users, Clock, Share2, TrendingUp, Trophy } from "lucide-react";
 import { useState } from "react";
 import { ShareModal } from "@/components/donation/ShareModal";
+import { handleDonationClick } from "@/lib/saweria";
 
 interface SidebarProps {
     data: any;
@@ -77,8 +78,8 @@ export function DonationSidebar({ data, percentage }: SidebarProps) {
                             </div>
 
                             {/* CTA Buttons */}
-                            <Link
-                                href={`/donasi/${data.slug}/payment`}
+                            <button
+                                onClick={() => handleDonationClick(data.slug, data.saweriaUsername)}
                                 className="group relative block w-full overflow-hidden rounded-xl bg-primary py-4 text-center font-bold text-primary-foreground text-base
                                            shadow-lg shadow-primary/30
                                            hover:shadow-xl hover:shadow-primary/40
@@ -91,7 +92,7 @@ export function DonationSidebar({ data, percentage }: SidebarProps) {
                                 </span>
                                 {/* Shimmer effect */}
                                 <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700" />
-                            </Link>
+                            </button>
 
                             <button
                                 onClick={() => setIsShareOpen(true)}

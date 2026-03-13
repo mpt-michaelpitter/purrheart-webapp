@@ -10,6 +10,7 @@ import { DonationStory, DonationList } from "@/components/donation/DonationConte
 import { DonationGallery } from "@/components/donation/DonationGallery";
 import { DonationSidebar } from "@/components/donation/DonationSidebar";
 import { CampaignUpdates } from "@/components/donation/CampaignUpdates";
+import { handleDonationClick } from "@/lib/saweria";
 
 export default function DonationDetailClient({ data }: { data: any }) {
     const [activeTab, setActiveTab] = useState<TabType>("donasi");
@@ -101,12 +102,12 @@ export default function DonationDetailClient({ data }: { data: any }) {
 
                 {/* Mobile sticky bottom CTA */}
                 <div className="fixed bottom-0 left-0 right-0 p-4 border-t border-border bg-background/80 backdrop-blur-xl z-50 md:hidden pb-safe">
-                    <Link
-                        href={`/donasi/${data.slug}/payment`}
+                    <button
+                        onClick={() => handleDonationClick(data.slug, data.saweriaUsername)}
                         className="block w-full text-center rounded-2xl bg-primary py-4 text-lg font-bold text-primary-foreground shadow-xl shadow-primary/30 active:scale-95 transition-transform"
                     >
                         Donasi Sekarang
-                    </Link>
+                    </button>
                 </div>
             </div>
         </div>

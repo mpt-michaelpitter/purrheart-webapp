@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Heart, Instagram, Phone, ArrowRight, User, Calendar, Cat, ShieldCheck } from "lucide-react";
 import { fadeLeft, fadeRight, fadeUp, scalePop, cardStagger, hoverLift, tapPress, viewport } from "@/lib/animations";
 import { PawPattern } from "@/components/ui/paw-pattern";
+import { handleDonationClick } from "@/lib/saweria";
 
 // ── Team / founder data ───────────────────────────────────────────────────────
 
@@ -213,13 +214,13 @@ export function AboutFounderSection() {
                             </p>
                             <div className="flex flex-col sm:flex-row gap-2">
                                 <motion.div whileHover={hoverLift} whileTap={tapPress} className="flex-1">
-                                    <Link
-                                        href="/donasi"
+                                    <button
+                                        onClick={() => handleDonationClick()}
                                         className="group flex items-center justify-center gap-2 w-full rounded-xl bg-[#fdc65c] py-3.5 text-sm font-bold text-[#562c72] shadow-lg shadow-[#fdc65c]/20 hover:shadow-xl transition-shadow duration-200"
                                     >
                                         Donasi Sekarang
                                         <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                                    </Link>
+                                    </button>
                                 </motion.div>
                                 <motion.div whileHover={hoverLift} whileTap={tapPress} className="flex-1">
                                     <Link
