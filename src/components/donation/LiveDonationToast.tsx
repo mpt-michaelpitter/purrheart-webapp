@@ -18,28 +18,23 @@ export function LiveDonationToast() {
     const [currentToast, setCurrentToast] = useState<Donation | null>(null);
     const seenIds = useRef<Set<string>>(new Set());
     const isInitialFetch = useRef(true);
+    const campaignCache = useRef<Map<string, string>>(new Map());
 
-    const fetchSingleDonation = async (id: string) => {
+    const getCampaignTitle = async (campaignRef: string) => {
+        if (campaignCache.current.has(campaignRef)) {
+            return campaignCache.current.get(campaignRef);
+        }
         try {
-            const query = `*[_type == "donation" && _id == $id][0] {
-                _id,
-                donorName,
-                amount,
-                "campaignTitle": campaign->title,
-                createdAt
-            }`;
-            const data = await client.fetch(query, { id });
-            if (data && !seenIds.current.has(data._id)) {
-                seenIds.current.add(data._id);
-                setDonations(prev => [...prev, data]);
-            }
-        } catch (error) {
-            console.error("Error fetching single donation:", error);
+            const title = await client.fetch(`*[_id == $ref][0].title`, { ref: campaignRef });
+            if (title) campaignCache.current.set(campaignRef, title);
+            return title || "Campaign";
+        } catch {
+            return "Campaign";
         }
     };
 
     useEffect(() => {
-        // 1. Initial Fetch to populate seenIds so we don't show old toasts
+        // 1. Initial Fetch to populate seenIds
         const fetchInitial = async () => {
             try {
                 const query = `*[_type == "donation" && status == "success"] | order(createdAt desc)[0...5] { _id }`;
@@ -53,21 +48,26 @@ export function LiveDonationToast() {
 
         fetchInitial();
 
-        // 2. Set up Real-time Listener
+        // 2. Set up Real-time Listener with includeResult for Zero Delay
         const query = `*[_type == "donation" && status == "success"]`;
-        const subscription = client.listen(query).subscribe((update: any) => {
-            if (update.result) {
-                // If it's a new document or a status change to success
-                const newId = update.result._id;
-                if (!seenIds.current.has(newId)) {
-                    fetchSingleDonation(newId);
-                }
-            } else if (update.transition === 'appear' || (update.transition === 'update' && update.result)) {
-                // Fallback for different listener event types
-                const newId = update.documentId;
-                if (newId && !seenIds.current.has(newId)) {
-                    fetchSingleDonation(newId);
-                }
+        const subscription = client.listen(query, {}, { includeResult: true }).subscribe(async (update: any) => {
+            const doc = update.result;
+            if (doc && !seenIds.current.has(doc._id)) {
+                seenIds.current.add(doc._id);
+
+                // Get campaign title (instantly from cache or one quick fetch if new)
+                const campaignRef = doc.campaign?._ref;
+                const campaignTitle = campaignRef ? await getCampaignTitle(campaignRef) : "Kebaikan";
+
+                const newDonation: Donation = {
+                    _id: doc._id,
+                    donorName: doc.donorName,
+                    amount: doc.amount,
+                    campaignTitle: campaignTitle,
+                    createdAt: doc._createdAt || new Date().toISOString()
+                };
+
+                setDonations(prev => [...prev, newDonation]);
             }
         });
 

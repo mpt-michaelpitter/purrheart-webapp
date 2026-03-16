@@ -146,13 +146,9 @@ export function Navbar() {
                                     {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
                                 </button>
                             )}
-                            <Link href="/akun">
-                                <div className="h-9 w-9 bg-primary/10 border border-primary/20 rounded-full flex items-center justify-center text-primary transition-transform active:scale-95">
-                                    <User className="h-4 w-4" strokeWidth={2.5} />
-                                </div>
-                            </Link>
                         </div>
                     </div>
+
 
                     {/* Bottom Row: Search */}
                     <div className="px-4 pb-3 pt-1">

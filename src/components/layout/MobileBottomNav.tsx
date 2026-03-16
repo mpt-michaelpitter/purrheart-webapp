@@ -10,7 +10,6 @@ const navItems = [
     { name: "Donasi", href: "/donasi", icon: Heart },
     { name: "Adopsi", href: "/adopsi", icon: Gift },
     { name: "Tentang", href: "/about", icon: LayoutGrid },
-    { name: "Akun", href: "/akun", icon: User },
 ];
 
 export function MobileBottomNav() {
