@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { client } from '@/sanity/lib/client';
 
-export const revalidate = 30; // Cache for 30 seconds to reduce Sanity API load
+export const revalidate = 0; // Disabled cache for 1s real-time updates
 
 export async function GET() {
     try {
