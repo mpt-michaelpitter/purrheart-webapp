@@ -107,18 +107,31 @@ export function DonationSidebar({ data, percentage }: SidebarProps) {
                         </div>
                     </div>
 
-                    {/* ── Top Donors ────────────────────────────────────── */}
-                    {data.donors?.length > 0 && (
-                        <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
-                            <div className="flex items-center gap-2 mb-4">
-                                <Trophy className="h-4 w-4 text-amber-500" />
-                                <h3 className="font-bold text-sm text-foreground">Donatur Terbanyak</h3>
-                            </div>
-                            <div className="space-y-3">
-                                {[...data.donors]
-                                    .sort((a: any, b: any) => b.amount - a.amount)
-                                    .slice(0, 5)
-                                    .map((d: any, i: number) => (
+                    {/* ── Top Donors (Aggregated Calculation) ─────────── */}
+                    {data.donors?.length > 0 && (() => {
+                        // Aggregate donations by donor name
+                        const aggregates = data.donors.reduce((acc: any, curr: any) => {
+                            const name = curr.name?.trim() || "Anonim";
+                            if (!acc[name]) {
+                                acc[name] = { name, amount: 0 };
+                            }
+                            acc[name].amount += curr.amount;
+                            return acc;
+                        }, {});
+
+                        // Convert to array, sort by amount, and take top 5
+                        const leaderboard = Object.values(aggregates)
+                            .sort((a: any, b: any) => b.amount - a.amount)
+                            .slice(0, 5);
+
+                        return (
+                            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+                                <div className="flex items-center gap-2 mb-4">
+                                    <Trophy className="h-4 w-4 text-amber-500" />
+                                    <h3 className="font-bold text-sm text-foreground">Donatur Terbanyak</h3>
+                                </div>
+                                <div className="space-y-3">
+                                    {leaderboard.map((d: any, i: number) => (
                                         <div key={i} className="flex items-center gap-3">
                                             {/* Rank badge */}
                                             <div className={`shrink-0 h-6 w-6 rounded-full flex items-center justify-center text-[10px] font-extrabold
@@ -133,11 +146,11 @@ export function DonationSidebar({ data, percentage }: SidebarProps) {
                                                 Rp {d.amount.toLocaleString("id-ID")}
                                             </span>
                                         </div>
-                                    ))
-                                }
+                                    ))}
+                                </div>
                             </div>
-                        </div>
-                    )}
+                        );
+                    })()}
                 </div>
             </div>
 
