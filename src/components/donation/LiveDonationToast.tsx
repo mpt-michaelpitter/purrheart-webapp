@@ -92,37 +92,48 @@ export function LiveDonationToast() {
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: -60, opacity: 0 }}
                     transition={{ type: "spring", stiffness: 120, damping: 20 }}
-                    className="fixed top-14 md:top-20 left-0 right-0 z-[100] w-full pointer-events-none"
+                    className="fixed top-0 md:top-20 left-0 right-0 z-[100] w-full pointer-events-none"
                 >
+                    {/* Full-width Bar Design */}
                     <div className="h-10 md:h-12 bg-slate-950/95 md:bg-slate-950/90 backdrop-blur-md border-b border-white/10 flex items-center shadow-2xl overflow-hidden ring-1 ring-white/5">
+
+                        {/* Live Status Label */}
                         <div className="absolute left-0 top-0 bottom-0 z-20 bg-gradient-to-r from-pink-600 to-purple-700 px-3 md:px-5 flex items-center gap-2 shadow-[8px_0_15px_rgba(0,0,0,0.4)]">
                             <div className="relative flex h-2 w-2">
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
                                 <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
                             </div>
-                            <span className="text-[9px] md:text-[10px] font-black text-white uppercase tracking-widest whitespace-nowrap">LIVE DONASI</span>
+
                         </div>
 
-                        <div className="flex-1 overflow-hidden pointer-events-auto">
+                        {/* Scrolling Content (Marquee) */}
+                        <div className="relative flex-1 h-full overflow-hidden pointer-events-auto">
                             <div
-                                className="flex items-center gap-6 whitespace-nowrap animate-marquee hover:[animation-play-state:paused] cursor-help w-max"
+                                className="absolute inset-0 flex items-center whitespace-nowrap animate-marquee hover:[animation-play-state:paused] cursor-help w-max"
                                 onAnimationEnd={() => setCurrentToast(null)}
                             >
-                                <div className="flex items-center gap-3 pl-[140px] md:pl-[180px]">
+                                <div className="flex items-center gap-3">
                                     <Heart className="w-4 h-4 md:w-5 md:h-5 text-pink-400 fill-pink-400" />
-                                    <span className="text-xs md:text-sm font-medium text-white/90">
-                                        <span className="font-bold text-pink-400">
+                                    <span className="text-xs md:text-sm font-medium text-white/90 leading-none">
+                                        <span className="font-bold text-pink-400 text-sm md:text-base">
                                             {currentToast.donorName?.trim() && currentToast.donorName !== "Anonymous"
                                                 ? currentToast.donorName
                                                 : "Orang Dermawan"}
-                                        </span> baru saja berdonasi {" "}
-                                        <span className="font-bold text-emerald-400 italic">Rp {currentToast.amount.toLocaleString("id-ID")}</span> {" "}
-                                        untuk <span className="underline decoration-purple-400/50 underline-offset-4">{currentToast.campaignTitle}</span>.
+                                        </span>
+                                        <span className="mx-2 opacity-70">baru saja berdonasi</span>
+                                        <span className="font-bold text-emerald-400 text-sm md:text-base bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20">
+                                            Rp {currentToast.amount.toLocaleString("id-ID")}
+                                        </span>
+                                        <span className="mx-2 opacity-70">untuk</span>
+                                        <span className="underline decoration-purple-400/50 underline-offset-4 font-semibold">
+                                            {currentToast.campaignTitle}
+                                        </span>
                                     </span>
                                 </div>
                             </div>
                         </div>
 
+                        {/* Fades for smooth transitions */}
                         <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-slate-950 via-slate-950/40 to-transparent z-10 pointer-events-none" />
                     </div>
                 </motion.div>
@@ -130,4 +141,3 @@ export function LiveDonationToast() {
         </AnimatePresence>
     );
 }
-

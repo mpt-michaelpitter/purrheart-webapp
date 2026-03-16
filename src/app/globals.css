@@ -123,11 +123,11 @@ body {
   }
 
   @keyframes marquee {
-    0% { transform: translateX(-10%); }
-    100% { transform: translateX(110vw); }
+    0% { transform: translateX(100vw); }
+    100% { transform: translateX(-100%); }
   }
 
   .animate-marquee {
-    animation: marquee 10s linear 2 forwards;
+    animation: marquee 15s linear forwards;
   }
 }
