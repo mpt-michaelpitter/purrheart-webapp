@@ -1,0 +1,12 @@
+pipelines:
+# Automated pipeline for syncing Bitbucket repository with its GitHub mirror, ensuring real-time updates across platforms.
+  default:
+    - step:
+        name: Sync GitHub Mirror
+        image: alpine/git:latest
+        clone:
+          enabled: false
+        script:
+          - git clone --mirror https://x-token-auth:"$BITBUCKET_VARIABLE"@bitbucket.org/_mpt/purrheart-webapp.git
+          - cd purrheart-webapp.git
+          - git push --mirror https://x-token-auth:"$GITHUB_VARIABLE"@github.com/mpt-michaelpitter/purrheart-webapp.git
