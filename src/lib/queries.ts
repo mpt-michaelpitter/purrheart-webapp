@@ -31,13 +31,13 @@ export const CAMPAIGN_CARD_FIELDS = `
 
 /** Latest N campaigns globally, newest first */
 export const latestCampaignsQuery = (limit = 4) =>
-    `*[_type == "campaign"] | order(_createdAt desc)[0..${limit - 1}] {
+    `*[_type == "campaign" && isActive == true] | order(_createdAt desc)[0..${limit - 1}] {
         ${CAMPAIGN_CARD_FIELDS}
     }`;
 
 /** Campaigns with deadlines approaching (within 30 days), soonest first */
 export const endingSoonCampaignsQuery = (limit = 6) =>
-    `*[_type == "campaign" && deadline != null && deadline > now() && dateTime(deadline) < dateTime(now()) + 60*60*24*30] | order(deadline asc)[0..${limit - 1}] {
+    `*[_type == "campaign" && isActive == true && deadline != null && deadline > now() && dateTime(deadline) < dateTime(now()) + 60*60*24*30] | order(deadline asc)[0..${limit - 1}] {
         ${CAMPAIGN_CARD_FIELDS}
     }`;
 
@@ -48,14 +48,14 @@ export const categoriesWithCampaignsQuery = (campaignsPerCategory = 8) =>
         "name": name,
         "slug": slug.current,
         "image": banner->imageUrl,
-        "campaigns": *[_type == "campaign" && references(^._id)] | order(_createdAt desc)[0..${campaignsPerCategory - 1}] {
+        "campaigns": *[_type == "campaign" && isActive == true && references(^._id)] | order(_createdAt desc)[0..${campaignsPerCategory - 1}] {
             ${CAMPAIGN_CARD_FIELDS}
         }
     }`;
 
 /** All campaigns in a specific category by slug */
 export const campaignsByCategoryQuery = `
-    *[_type == "campaign" && category->slug.current == $slug] | order(_createdAt desc) {
+    *[_type == "campaign" && isActive == true && category->slug.current == $slug] | order(_createdAt desc) {
         ${CAMPAIGN_CARD_FIELDS}
     }
 `;
@@ -82,7 +82,7 @@ export const bannersQuery = `
 
 /** Full campaign detail (for /donasi/[slug]) */
 export const campaignDetailQuery = `
-    *[_type == "campaign" && slug.current == $slug][0] {
+    *[_type == "campaign" && isActive == true && slug.current == $slug][0] {
         _id,
         title,
         "slug": slug.current,

@@ -6,7 +6,7 @@ declare module 'midtrans-client' {
             clientKey: string;
         });
 
-        createTransaction(parameter: any): Promise<{
+        createTransaction(parameter: Record<string, unknown>): Promise<{
             token: string;
             redirect_url: string;
         }>;
@@ -19,9 +19,9 @@ declare module 'midtrans-client' {
             clientKey: string;
         });
 
-        charge(parameter: any): Promise<any>;
+        charge(parameter: Record<string, unknown>): Promise<Record<string, unknown>>;
         transaction: {
-            status(orderId: string): Promise<any>;
+            status(orderId: string): Promise<Record<string, unknown>>;
         }
     }
 }

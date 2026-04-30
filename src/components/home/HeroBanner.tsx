@@ -12,7 +12,7 @@ import { urlFor } from "@/sanity/lib/image";
 interface Banner {
     _id: string;
     title: string;
-    imageUrl: any;
+    imageUrl: Record<string, unknown> | null;
     redirectUrl: string;
 }
 
@@ -33,7 +33,6 @@ export function HeroBanner({ banners = [] }: HeroBannerProps) {
 
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
-    const [isHovered, setIsHovered] = useState(false);
 
     const displayBanners = banners.length > 0 ? banners : defaultBanners;
 
@@ -56,11 +55,9 @@ export function HeroBanner({ banners = [] }: HeroBannerProps) {
                 <div
                     className="relative overflow-hidden rounded-2xl md:rounded-3xl shadow-2xl shadow-black/20 group"
                     ref={emblaRef}
-                    onMouseEnter={() => setIsHovered(true)}
-                    onMouseLeave={() => setIsHovered(false)}
                 >
                     <div className="flex touch-pan-y">
-                        {displayBanners.map((banner: any) => {
+                        {displayBanners.map((banner: Banner & { categorySlug?: string; imageSrc?: string }) => {
                             const imageSrc = banner.imageUrl
                                 ? urlFor(banner.imageUrl).width(1400).url()
                                 : (banner.imageSrc || "/images/banner/1.webp");
@@ -71,7 +68,7 @@ export function HeroBanner({ banners = [] }: HeroBannerProps) {
 
                             return (
                                 <div key={banner._id} className="relative flex-none w-full min-w-0">
-                                    <Link href={bannerLink} className="block relative w-full aspect-[4/5] md:aspect-[24/9]">
+                                    <Link href={bannerLink} className="block relative w-full aspect-4/5 md:aspect-24/9">
                                         <Image
                                             src={imageSrc}
                                             alt={banner.title || "Banner"}
@@ -81,7 +78,7 @@ export function HeroBanner({ banners = [] }: HeroBannerProps) {
                                             sizes="(max-width: 768px) 100vw, 1400px"
                                         />
                                         {/* Gradient overlay bottom */}
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+                                        <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/10 to-transparent" />
 
                                         {/* Title overlay */}
                                         {banner.title && (

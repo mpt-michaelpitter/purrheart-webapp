@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
     }
 
     const query = `
-        *[_type == "campaign" && title match $pattern] | order(_createdAt desc)[0..5] {
+        *[_type == "campaign" && isActive == true && title match $pattern] | order(_createdAt desc)[0..5] {
             _id,
             title,
             "slug": slug.current,

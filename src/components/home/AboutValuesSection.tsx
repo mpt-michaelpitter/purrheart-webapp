@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Stethoscope, Home, HandshakeIcon, Heart, BookOpen, Clock, ArrowRight, Utensils, Brush, Bath } from "lucide-react";
-import { fadeUp, fadeLeft, fadeRight, scalePop, cardStagger, hoverLift, tapPress, viewport } from "@/lib/animations";
+import { fadeUp, fadeLeft, scalePop, cardStagger, hoverLift, tapPress, viewport } from "@/lib/animations";
 import { PawPattern } from "@/components/ui/paw-pattern";
 
 // ── Values data ───────────────────────────────────────────────────────────────
@@ -126,7 +126,7 @@ export function AboutValuesSection() {
                     </div>
 
                     {/* Divider */}
-                    <div className="mt-8 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                    <div className="mt-8 h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
                 </motion.div>
 
                 {/* ── Values grid ── */}
@@ -255,9 +255,9 @@ export function AboutValuesSection() {
                     <div className="relative z-10 max-w-2xl mx-auto space-y-5">
                         <p className="text-5xl">💬</p>
                         <blockquote className="text-xl md:text-3xl font-extrabold text-white leading-snug">
-                            "Kami tidak merawat ratusan kucing. Kami merawat{" "}
+                            &quot;Kami tidak merawat ratusan kucing. Kami merawat{" "}
                             <span className="text-[#fdc65c]">satu kucing</span>,{" "}
-                            ratusan kali — dengan kepedulian yang sama."
+                            ratusan kali — dengan kepedulian yang sama.&quot;
                         </blockquote>
                         <p className="text-purple-200/50 text-sm font-medium">— Ci Mimi, Pendiri Purrheart Shelter</p>
                     </div>

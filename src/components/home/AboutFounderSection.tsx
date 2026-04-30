@@ -82,7 +82,7 @@ export function AboutFounderSection() {
                     >
                         <div className="relative rounded-3xl border border-[#562c72]/20 bg-card overflow-hidden shadow-xl">
                             {/* Top accent bar */}
-                            <div className="h-2 w-full bg-gradient-to-r from-[#562c72] via-purple-400 to-[#fdc65c]" />
+                            <div className="h-2 w-full bg-linear-to-r from-[#562c72] via-purple-400 to-[#fdc65c]" />
 
                             <div className="p-8 space-y-6">
                                 {/* Avatar area */}
@@ -92,7 +92,7 @@ export function AboutFounderSection() {
                                         transition={{ duration: 3, repeat: Infinity, repeatDelay: 5, ease: "easeInOut" }}
                                         className="relative h-20 w-20 shrink-0"
                                     >
-                                        <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-[#562c72] to-purple-400 overflow-hidden shadow-lg border-2 border-white dark:border-zinc-800">
+                                        <div className="h-20 w-20 rounded-2xl bg-linear-to-br from-[#562c72] to-purple-400 overflow-hidden shadow-lg border-2 border-white dark:border-zinc-800">
                                             <Image
                                                 src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&h=200&auto=format&fit=crop"
                                                 alt="Ci Mimi"
@@ -130,8 +130,8 @@ export function AboutFounderSection() {
                                 {/* Quote */}
                                 <div className="rounded-2xl border-l-4 border-[#562c72] bg-[#562c72]/5 p-4">
                                     <p className="text-sm italic text-foreground leading-relaxed">
-                                        "Kalau bukan kita yang peduli, siapa lagi? Mereka tidak bisa
-                                        meminta tolong dengan kata-kata."
+                                        &quot;Kalau bukan kita yang peduli, siapa lagi? Mereka tidak bisa
+                                        meminta tolong dengan kata-kata.&quot;
                                     </p>
                                     <p className="text-xs text-muted-foreground mt-2">— Ci Mimi</p>
                                 </div>

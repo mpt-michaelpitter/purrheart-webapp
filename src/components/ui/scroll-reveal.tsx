@@ -72,6 +72,7 @@ export function ScrollReveal({
 
     // Define initial states based on animation type
     const getInitial = () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const initial: any = { opacity: 0 };
 
         if (enableScale) initial.scale = 0.95;

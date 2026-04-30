@@ -5,7 +5,7 @@ export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url);
         let category = searchParams.get("category");
-        let limitStr = searchParams.get("limit");
+        const limitStr = searchParams.get("limit");
 
         // --- SECURITY ---
         const { sanitizeInput } = await import("@/lib/security");
@@ -32,7 +32,7 @@ export async function GET(request: Request) {
         }
         // --- SECURITY END ---
 
-        let query = `*[_type == "campaign"] | order(_createdAt desc)[0...${limit}] {
+        let query = `*[_type == "campaign" && isActive == true] | order(_createdAt desc)[0...${limit}] {
             _id,
             title,
             "slug": slug.current,
@@ -48,7 +48,7 @@ export async function GET(request: Request) {
 
         // Simple client-side filtering (or adjust GROQ if category is provided)
         if (category) {
-            query = `*[_type == "campaign" && category->slug.current == "${category}"] | order(_createdAt desc)[0...${limit}] {
+            query = `*[_type == "campaign" && isActive == true && category->slug.current == "${category}"] | order(_createdAt desc)[0...${limit}] {
                 _id,
                 title,
                 "slug": slug.current,

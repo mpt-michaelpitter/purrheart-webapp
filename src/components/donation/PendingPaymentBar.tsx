@@ -2,12 +2,17 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Loader2, AlertCircle, X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { AlertCircle, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 
+interface PendingPayment {
+    slug: string;
+    amount: number;
+    expiryTime: string;
+}
+
 export function PendingPaymentBar() {
-    const [pendingPayment, setPendingPayment] = useState<any>(null);
+    const [pendingPayment, setPendingPayment] = useState<PendingPayment | null>(null);
     const [isVisible, setIsVisible] = useState(false);
     const pathname = usePathname();
 
@@ -20,8 +25,10 @@ export function PendingPaymentBar() {
                 // Check expiry (e.g. 24 hours)
                 const expiry = new Date(parsed.expiryTime);
                 if (expiry > new Date()) {
-                    setPendingPayment(parsed);
-                    setIsVisible(true);
+                    setTimeout(() => {
+                        setPendingPayment(parsed);
+                        setIsVisible(true);
+                    }, 0);
                 } else {
                     localStorage.removeItem("pending_payment");
                 }
@@ -58,7 +65,7 @@ export function PendingPaymentBar() {
     if (pathname.includes(`/donasi/${pendingPayment.slug}/payment`)) return null;
 
     return (
-        <div className="fixed bottom-[70px] md:bottom-4 left-4 right-4 z-[90] animate-in slide-in-from-bottom-5 duration-300">
+        <div className="fixed bottom-[70px] md:bottom-4 left-4 right-4 z-90 animate-in slide-in-from-bottom-5 duration-300">
             <div className="bg-orange-600 text-white p-4 rounded-xl shadow-xl flex items-center justify-between gap-4 max-w-xl mx-auto backdrop-blur-md bg-opacity-95">
                 <div className="flex items-center gap-3 overflow-hidden">
                     <div className="bg-white/20 p-2 rounded-full shrink-0 animate-pulse">

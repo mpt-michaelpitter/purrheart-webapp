@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, PartyPopper, ArrowLeft } from "lucide-react";
+import { Loader2, PartyPopper } from "lucide-react";
 import Link from "next/link";
 
 interface PaymentPageClientProps {
