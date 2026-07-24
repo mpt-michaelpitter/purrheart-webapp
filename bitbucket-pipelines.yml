@@ -1,5 +1,5 @@
 pipelines:
-# Automated pipeline for syncing Bitbucket repository with its GitHub mirror, ensuring real-time updates across platforms.
+# Automated pipeline for syncing Bitbucket repository with its GitHub mirror, ensuring real-time updates across platforms
   default:
     - step:
         name: Sync GitHub Mirror
