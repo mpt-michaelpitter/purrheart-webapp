@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import PaymentPageClient from "./PaymentPageClient";
 
 async function getCampaign(slug: string) {
-    const query = `*[_type == "campaign" && slug.current == $slug][0] {
+    const query = `*[_type == "campaign" && isActive == true && slug.current == $slug][0] {
         title,
         "slug": slug.current,
         saweriaUsername

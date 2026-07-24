@@ -1,6 +1,6 @@
 "use client";
 
-import { Heart, User, Sun, Moon } from "lucide-react";
+import { Heart, Sun, Moon } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
@@ -14,7 +14,10 @@ export function Navbar() {
     const [scrolled, setScrolled] = useState(false);
     const pathname = usePathname();
 
-    useEffect(() => { setMounted(true); }, []);
+    useEffect(() => {
+        const t = setTimeout(() => setMounted(true), 0);
+        return () => clearTimeout(t);
+    }, []);
 
     // Add scroll-based glassmorphism
     useEffect(() => {

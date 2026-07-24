@@ -19,7 +19,6 @@ export function RotatingBadge({
     duration = 10,
 }: RotatingBadgeProps) {
     const characters = text.split("");
-    const radius = size / 2.5; // Adjust radius for text placement
 
     return (
         <div

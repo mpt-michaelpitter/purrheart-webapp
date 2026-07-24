@@ -26,7 +26,7 @@ export default function AdopsiPage() {
         <div className="min-h-screen bg-background">
 
             {/* ── Hero Header ─────────────────────────────────────────────── */}
-            <div className="relative overflow-hidden bg-gradient-to-br from-[#562c72] via-[#3d1f52] to-[#1e0d38] py-20 md:py-28 px-4">
+            <div className="relative overflow-hidden bg-linear-to-br from-[#562c72] via-[#3d1f52] to-[#1e0d38] py-20 md:py-28 px-4">
                 {/* Dot grid texture */}
                 <div
                     className="absolute inset-0 opacity-[0.07]"
@@ -87,7 +87,7 @@ export default function AdopsiPage() {
                     </div>
                 </div>
 
-                <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 h-20 bg-linear-to-t from-background to-transparent" />
             </div>
 
             {/* ── Stats Strip ─────────────────────────────────────────────── */}
@@ -110,7 +110,7 @@ export default function AdopsiPage() {
 
             {/* ── What is Adopsi? Banner ───────────────────────────────────── */}
             <div className="container mx-auto px-4 md:px-6 max-w-5xl py-8">
-                <div className="rounded-3xl bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/10 border border-violet-100 dark:border-violet-800/30 p-8 md:p-12 grid md:grid-cols-2 gap-8 items-center">
+                <div className="rounded-3xl bg-linear-to-br from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/10 border border-violet-100 dark:border-violet-800/30 p-8 md:p-12 grid md:grid-cols-2 gap-8 items-center">
                     <div className="space-y-3">
                         <h2 className="text-2xl md:text-3xl font-extrabold text-foreground">Apa itu Adopsi?</h2>
                         <p className="text-muted-foreground leading-relaxed text-sm md:text-base">
@@ -148,12 +148,12 @@ export default function AdopsiPage() {
 
             {/* Divider */}
             <div className="container mx-auto px-4">
-                <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent my-4" />
+                <div className="h-px bg-linear-to-r from-transparent via-border to-transparent my-4" />
             </div>
 
             {/* ── What is OTA Banner ───────────────────────────────────────── */}
             <div className="container mx-auto px-4 md:px-6 max-w-5xl py-8">
-                <div className="rounded-3xl bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/15 dark:to-orange-900/10 border border-amber-100 dark:border-amber-800/30 p-8 md:p-12 grid md:grid-cols-2 gap-8 items-center">
+                <div className="rounded-3xl bg-linear-to-br from-amber-50 to-orange-50 dark:from-amber-900/15 dark:to-orange-900/10 border border-amber-100 dark:border-amber-800/30 p-8 md:p-12 grid md:grid-cols-2 gap-8 items-center">
                     <div className="space-y-3">
                         <h2 className="text-2xl md:text-3xl font-extrabold text-foreground">
                             Belum Siap Adopsi? <span className="text-amber-600">Jadi OTA!</span>

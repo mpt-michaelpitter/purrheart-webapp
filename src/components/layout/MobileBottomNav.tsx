@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, Heart, User, LayoutGrid, Gift } from "lucide-react";
+import { Home, Heart, LayoutGrid, Gift } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";

@@ -73,6 +73,13 @@ export const campaign = defineType({
 
         // ── Classification ─────────────────────────────────────────────────────
         defineField({
+            name: 'isActive',
+            title: 'Aktif / Muncul di Web',
+            type: 'boolean',
+            description: 'Jika dicentang, campaign akan muncul di website. Jika tidak, akan disembunyikan.',
+            initialValue: true,
+        }),
+        defineField({
             name: 'category',
             title: 'Kategori',
             type: 'reference',

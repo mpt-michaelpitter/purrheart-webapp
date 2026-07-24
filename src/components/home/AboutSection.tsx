@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { fadeUp, fadeDown, fadeLeft, fadeRight, scalePop, hoverLift, tapPress, viewport } from "@/lib/animations";
+import { scalePop, hoverLift, tapPress } from "@/lib/animations";
 import { ArrowRight, Heart, Home, Cat, Sparkles, Shield, Activity } from "lucide-react";
 import { Timeline } from "@/components/ui/timeline";
 import { Button as MovingBorderButton } from "@/components/ui/moving-border";
@@ -232,9 +232,9 @@ export function AboutSection() {
 
             {/* ── Bottom CTA ────────────────────────────────────────────────── */}
             <div className="container mx-auto px-4 md:px-6 pb-16">
-                <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#2d1142] to-[#1a0a26] border border-white/5 p-10 md:p-14 text-center">
+                <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-[#2d1142] to-[#1a0a26] border border-white/5 p-10 md:p-14 text-center">
                     {/* Accent line */}
-                    <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#fdc65c]/60 to-transparent" />
+                    <div className="absolute top-0 left-0 right-0 h-0.5 bg-linear-to-r from-transparent via-[#fdc65c]/60 to-transparent" />
                     {/* Glow */}
                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                         <div className="h-64 w-64 rounded-full bg-violet-600/10 blur-3xl" />

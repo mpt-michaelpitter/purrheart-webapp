@@ -24,7 +24,7 @@ function rateLimit(ip: string) {
 }
 
 export async function middleware(request: NextRequest) {
-    const ip = request.headers.get('x-forwarded-for') || (request as any).ip || '127.0.0.1' || '192.168.18.3';
+    const ip = request.headers.get('x-forwarded-for') || (request as { ip?: string }).ip || '127.0.0.1' || '192.168.18.3';
 
     // Rate Limit API routes
     if (request.nextUrl.pathname.startsWith('/api/')) {

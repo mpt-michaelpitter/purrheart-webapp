@@ -35,14 +35,14 @@ export function DonationCard({
                 // Border — subtle in light mode
                 "border border-border/60 hover:border-primary/30",
                 // Shadow — soft elevation
-                "shadow-sm shadow-black/[0.04] hover:shadow-lg hover:shadow-primary/8",
+                "shadow-sm shadow-black/4 hover:shadow-lg hover:shadow-primary/8",
                 // Motion
                 "transition-all duration-300 hover:-translate-y-1",
                 className
             )}
         >
             {/* ── Image ──────────────────────────────────────────────────── */}
-            <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
+            <div className="relative aspect-4/3 w-full overflow-hidden bg-muted">
                 {imageSrc ? (
                     <>
                         <Image
@@ -52,7 +52,7 @@ export function DonationCard({
                             className="object-cover object-top transition-transform duration-500 group-hover:scale-110"
                         />
                         {/* Dark gradient overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60" />
+                        <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent opacity-60" />
                     </>
                 ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-muted-foreground/50">
@@ -124,7 +124,7 @@ export function DonationCard({
                     {/* Progress bar with glow */}
                     <div className="relative h-2 w-full overflow-hidden rounded-full bg-muted">
                         <div
-                            className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-primary to-purple-400 transition-all duration-700 ease-out"
+                            className="absolute inset-y-0 left-0 rounded-full bg-linear-to-r from-primary to-purple-400 transition-all duration-700 ease-out"
                             style={{ width: `${percentage}%` }}
                         />
                     </div>
